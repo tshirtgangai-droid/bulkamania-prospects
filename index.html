@@ -37,16 +37,18 @@
         /* --- EXPANDED header (visible at top of page) --- */
         .header-expanded {
             padding: 12px 20px 8px;
-            transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+            transition: max-height 0.25s ease-out, opacity 0.2s ease-out, padding 0.25s ease-out;
             max-height: 300px;
             opacity: 1;
             overflow: hidden;
+            will-change: max-height, opacity;
         }
 
         .header.collapsed .header-expanded {
             max-height: 0;
             opacity: 0;
             padding: 0 20px;
+            pointer-events: none;
         }
 
         .header-top {
@@ -456,7 +458,7 @@
 
         .status-row {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
         }
 
@@ -830,7 +832,11 @@
             margin-top: 5px;
         }
 
-        /* Responsive */
+        .header-logo {
+            transition: width 0.2s, height 0.2s;
+        }
+
+        /* Responsive — Tablet */
         @media (max-width: 1024px) {
             .lead-card {
                 grid-template-columns: 1fr;
@@ -850,38 +856,255 @@
             }
         }
 
+        /* Responsive — Mobile */
         @media (max-width: 768px) {
             .header-top {
                 flex-direction: column;
-                gap: 15px;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .header-title {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .header-title h1 {
+                font-size: 18px;
+            }
+
+            .header-subtitle {
+                font-size: 10px;
+            }
+
+            .header-expanded {
+                padding: 10px 12px 6px;
+            }
+
+            .create-presentation-btn-header {
+                width: 100%;
+                padding: 10px 16px;
+                font-size: 13px;
             }
 
             .progress-section {
                 grid-template-columns: 1fr;
+                gap: 8px;
             }
 
-            .filter-bar {
-                flex-direction: column;
+            .header-compact {
+                padding: 6px 12px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .compact-stats {
+                gap: 6px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .filter-btn {
+                padding: 4px 8px;
+                font-size: 10px;
             }
 
             .search-input {
                 width: 100%;
+                min-width: unset;
+                max-width: 100%;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .main {
+                margin: 15px auto;
+                padding: 0 10px;
             }
 
             .lead-card {
                 grid-template-columns: 1fr;
+                margin-bottom: 16px;
+                border-radius: 10px;
             }
 
-            .quick-buttons {
-                grid-template-columns: repeat(2, 1fr);
+            .lead-intel {
+                padding: 15px;
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .company-header {
+                gap: 10px;
+            }
+
+            .company-logo {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+                border-radius: 6px;
+            }
+
+            .company-name {
+                font-size: 15px;
+                margin-bottom: 6px;
+            }
+
+            .badge-row {
+                gap: 5px;
+                font-size: 10px;
+            }
+
+            .badge {
+                padding: 3px 8px;
+                border-radius: 10px;
+            }
+
+            .contact-info {
+                padding-top: 10px;
+                font-size: 11px;
+            }
+
+            .contact-line {
+                flex-wrap: wrap;
+                gap: 4px;
+                margin-bottom: 6px;
+            }
+
+            .contact-label {
+                min-width: 50px;
+                font-size: 11px;
+            }
+
+            .contact-value {
+                word-break: break-all;
+            }
+
+            .buying-signal {
+                padding: 8px;
+                font-size: 11px;
+                margin-top: 8px;
+            }
+
+            .comments-box {
+                padding: 8px;
+                font-size: 11px;
+                margin-top: 8px;
+            }
+
+            .action-panel {
+                padding: 15px;
+                gap: 12px;
+            }
+
+            .section-title {
+                font-size: 11px;
+                margin-bottom: 8px;
             }
 
             .status-row {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+
+            .outreach-tabs {
+                gap: 4px;
+                margin-bottom: 10px;
+            }
+
+            .outreach-tab-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .quick-buttons {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
             }
 
             .action-buttons {
                 grid-template-columns: 1fr;
+                gap: 6px;
+            }
+        }
+
+        /* Responsive — Small Mobile (iPhone SE, etc.) */
+        @media (max-width: 480px) {
+            .header-title h1 {
+                font-size: 16px;
+            }
+
+            .header-expanded {
+                padding: 8px 10px 4px;
+            }
+
+            .header-compact {
+                padding: 5px 10px;
+            }
+
+            .main {
+                margin: 10px auto;
+                padding: 0 8px;
+            }
+
+            .lead-intel {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .company-logo {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .company-name {
+                font-size: 14px;
+            }
+
+            .badge-row {
+                font-size: 9px;
+            }
+
+            .badge {
+                padding: 2px 6px;
+            }
+
+            .contact-info {
+                font-size: 10px;
+            }
+
+            .action-panel {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .status-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+            }
+
+            .quick-buttons {
+                grid-template-columns: 1fr 1fr;
+                gap: 5px;
+            }
+
+            .outreach-tab-btn {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+
+            .create-presentation-btn-header {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+
+            .expand-toggle {
+                font-size: 9px;
+                padding: 2px 6px;
             }
         }
 
@@ -911,8 +1134,9 @@
             <div class="header-expanded">
                 <div class="header-top">
                     <div class="header-title">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiNkNDIwMjciIHN0cm9rZT0iI2Q0MjAyNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMzgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cGF0aCBkPSJNMzUgMzggTDM1IDMyIFEzNSAyOCAzOSAyOCBMNDMgMjggUTQ0IDI4IDQ0IDI5IEw0NCAzMyBRNDQgMzUgNDYgMzUgTDU0IDM1IFE1NiAzNSA1NiAzMyBMNTYgMjkgUTU2IDI4IDU3IDI4IEw2MSAyOCBRNjUgMjggNjUgMzIgTDY1IDM4IEw3MCAzOCBRNzIgMzggNzIgNDAgTDcyIDQ1IFE3MiA0NyA3MCA0NyBMNjcgNDcgTDY3IDcwIFE2NyA3MiA2NSA3MiBMMzUgNzIgUTMzIDcyIDMzIDcwIEwzMyA0NyBMMzAgNDcgUTI4IDQ3IDI4IDQ1IEwyOCA0MCBRMjggMzggMzAgMzggWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+" alt="Bulkamania" style="width:42px;height:42px;border-radius:50%;flex-shrink:0;" class="header-logo">
                         <div>
-                            <h1>🎨 Bulkamania Promotions</h1>
+                            <h1>Bulkamania Promotions</h1>
                             <div class="header-subtitle">Sales Rep Action Dashboard — Daily Prospects — March 16, 2026</div>
                         </div>
                     </div>
@@ -951,6 +1175,7 @@
 
             <!-- COMPACT bar: always visible, becomes the only bar when scrolled -->
             <div class="header-compact">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiNkNDIwMjciIHN0cm9rZT0iI2Q0MjAyNyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMzgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cGF0aCBkPSJNMzUgMzggTDM1IDMyIFEzNSAyOCAzOSAyOCBMNDMgMjggUTQ0IDI4IDQ0IDI5IEw0NCAzMyBRNDQgMzUgNDYgMzUgTDU0IDM1IFE1NiAzNSA1NiAzMyBMNTYgMjkgUTU2IDI4IDU3IDI4IEw2MSAyOCBRNjUgMjggNjUgMzIgTDY1IDM4IEw3MCAzOCBRNzIgMzggNzIgNDAgTDcyIDQ1IFE3MiA0NyA3MCA0NyBMNjcgNDcgTDY3IDcwIFE2NyA3MiA2NSA3MiBMMzUgNzIgUTMzIDcyIDMzIDcwIEwzMyA0NyBMMzAgNDcgUTI4IDQ3IDI4IDQ1IEwyOCA0MCBRMjggMzggMzAgMzggWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+" alt="" style="width:22px;height:22px;border-radius:50%;flex-shrink:0;" class="compact-logo">
                 <span class="compact-progress"><span id="compact-contacted">0</span>/20 <div class="progress-bar-mini"><div class="progress-fill-mini" id="progress-fill-mini"></div></div></span>
                 <span class="compact-stats">
                     <span class="compact-stat">🔥 <span id="compact-hot">0</span></span>
@@ -981,16 +1206,12 @@
                 <div class="footer-stat-value" id="footer-contacted">0</div>
             </div>
             <div class="footer-stat">
-                <div class="footer-stat-label">Follow Up</div>
-                <div class="footer-stat-value" id="footer-followup">0</div>
+                <div class="footer-stat-label">Email Sent</div>
+                <div class="footer-stat-value" id="footer-email-sent">0</div>
             </div>
             <div class="footer-stat">
-                <div class="footer-stat-label">Closed Won</div>
-                <div class="footer-stat-value" id="footer-closed-won">0</div>
-            </div>
-            <div class="footer-stat">
-                <div class="footer-stat-label">Closed Lost</div>
-                <div class="footer-stat-value" id="footer-closed-lost">0</div>
+                <div class="footer-stat-label">Phone Call Follow Up</div>
+                <div class="footer-stat-value" id="footer-phone-followup">0</div>
             </div>
         </div>
         <div>Tip: Use arrow keys to scroll between leads | Click status buttons to track progress</div>
@@ -998,24 +1219,33 @@
     </div>
 
     <script>
-        // --- Header collapse on scroll ---
+        // --- Header collapse on scroll (debounced to prevent flash) ---
         let headerCollapsed = false;
+        let manualToggle = false;
         const header = document.getElementById('main-header');
         const toggleBtn = document.getElementById('expand-toggle');
+        let scrollTick = false;
 
         window.addEventListener('scroll', function() {
-            if (window.scrollY > 80 && !headerCollapsed) {
-                header.classList.add('collapsed');
-                headerCollapsed = true;
-                toggleBtn.textContent = '▼';
-            } else if (window.scrollY <= 30 && headerCollapsed) {
-                header.classList.remove('collapsed');
-                headerCollapsed = false;
-                toggleBtn.textContent = '▲';
-            }
-        });
+            if (manualToggle || scrollTick) return;
+            scrollTick = true;
+            requestAnimationFrame(function() {
+                const y = window.scrollY;
+                if (y > 120 && !headerCollapsed) {
+                    header.classList.add('collapsed');
+                    headerCollapsed = true;
+                    toggleBtn.textContent = '▼';
+                } else if (y <= 10 && headerCollapsed && !manualToggle) {
+                    header.classList.remove('collapsed');
+                    headerCollapsed = false;
+                    toggleBtn.textContent = '▲';
+                }
+                scrollTick = false;
+            });
+        }, { passive: true });
 
         function toggleHeader() {
+            manualToggle = true;
             if (header.classList.contains('collapsed')) {
                 header.classList.remove('collapsed');
                 headerCollapsed = false;
@@ -1025,6 +1255,7 @@
                 headerCollapsed = true;
                 toggleBtn.textContent = '▼';
             }
+            setTimeout(function() { manualToggle = false; }, 500);
         }
 
         function syncCompactCounters() {
@@ -1614,7 +1845,7 @@
             filtered.forEach(p => {
                 const logo = p.company.split(' ')[0].charAt(0).toUpperCase() + p.company.split(' ')[1].charAt(0).toUpperCase();
                 const status = leadStatuses[p.id] || 'Not Contacted';
-                const cardClass = status === 'Closed Won' ? 'closed-won' : status === 'Closed Lost' ? 'closed-lost' : status === 'Contacted' ? 'contacted' : '';
+                const cardClass = status === 'Contacted' ? 'contacted' : status === 'Email Sent' ? 'contacted' : status === 'Phone Call Follow Up' ? 'contacted' : '';
 
                 const html = `
                     <div class="lead-card ${p.rating} ${cardClass.toLowerCase()}" id="card-${p.id}" data-id="${p.id}">
@@ -1662,14 +1893,14 @@
                                         <span class="contact-label">Phone:</span>
                                         <span class="contact-value"><a href="tel:${p.phone}">${p.phone}</a></span>
                                     </div>
-                                    <div class="contact-line">
+                                    ${p.instagram ? `<div class="contact-line">
                                         <span class="contact-label">Instagram:</span>
                                         <span class="contact-value"><a href="${p.instagram}" target="_blank">@${p.instagram.split('/').filter(x => x)[3]}</a></span>
-                                    </div>
-                                    <div class="contact-line">
+                                    </div>` : ''}
+                                    ${p.linkedin ? `<div class="contact-line">
                                         <span class="contact-label">LinkedIn:</span>
                                         <span class="contact-value"><a href="${p.linkedin}" target="_blank">Company Page</a></span>
-                                    </div>
+                                    </div>` : ''}
                                     ${p.mutualConnections && p.mutualConnections !== 'Not found' ? `
                                     <div class="contact-line">
                                         <span class="contact-label">Mutual:</span>
@@ -1687,9 +1918,8 @@
                                 <div class="status-row">
                                     <button class="status-btn ${status === 'Not Contacted' ? 'active' : ''}" onclick="setStatus(${p.id}, 'Not Contacted')">Not Contacted</button>
                                     <button class="status-btn ${status === 'Contacted' ? 'active' : ''}" onclick="setStatus(${p.id}, 'Contacted')">Contacted</button>
-                                    <button class="status-btn ${status === 'Follow Up' ? 'active' : ''}" onclick="setStatus(${p.id}, 'Follow Up')">Follow Up</button>
-                                    <button class="status-btn ${status === 'Closed Won' ? 'active' : ''}" onclick="setStatus(${p.id}, 'Closed Won')">Won</button>
-                                    <button class="status-btn ${status === 'Closed Lost' ? 'active' : ''}" onclick="setStatus(${p.id}, 'Closed Lost')">Lost</button>
+                                    <button class="status-btn ${status === 'Email Sent' ? 'active' : ''}" onclick="setStatus(${p.id}, 'Email Sent')">Email Sent</button>
+                                    <button class="status-btn ${status === 'Phone Call Follow Up' ? 'active' : ''}" onclick="setStatus(${p.id}, 'Phone Call Follow Up')">Phone Call Follow Up</button>
                                 </div>
                             </div>
 
@@ -1697,8 +1927,8 @@
                             <div>
                                 <div class="outreach-tabs">
                                     <button class="outreach-tab-btn active" onclick="switchOutreachTab(${p.id}, 'email')">📧 Email</button>
-                                    <button class="outreach-tab-btn" onclick="switchOutreachTab(${p.id}, 'instagram')">📱 Instagram</button>
-                                    <button class="outreach-tab-btn" onclick="switchOutreachTab(${p.id}, 'linkedin')">💼 LinkedIn</button>
+                                    ${p.instagram ? `<button class="outreach-tab-btn" onclick="switchOutreachTab(${p.id}, 'instagram')">📱 Instagram</button>` : ''}
+                                    ${p.linkedin ? `<button class="outreach-tab-btn" onclick="switchOutreachTab(${p.id}, 'linkedin')">💼 LinkedIn</button>` : ''}
                                 </div>
 
                                 <!-- Email Tab Content -->
@@ -1716,7 +1946,7 @@
                                             <span class="file-name" id="file-name-${p.id}"></span>
                                         </div>
 
-                                        <button class="create-pres-btn" onclick="window.open('https://chatgpt.com/g/g-687f1127e25881918cab0e80dc5f0e39-bulkamania-presentation-creator', '_blank')">🎨 Create Presentation</button>
+                                        <button class="create-pres-btn" onclick="createPresentation(${p.id})">🎨 Create Presentation</button>
 
                                         <div class="helper-text">Use the Bulkamania GPT to create a custom product mockup with ${p.company}'s logo, then attach it to your email.</div>
 
@@ -1731,7 +1961,7 @@
                                 </div>
 
                                 <!-- Instagram Tab Content -->
-                                <div class="outreach-tab-content tab-instagram">
+                                ${p.instagram ? `<div class="outreach-tab-content tab-instagram">
                                     <div class="dm-section" style="border: none; padding: 0; background: transparent;">
                                         <textarea class="dm-textarea" id="dm-body-${p.id}" placeholder="DM text">${editedDMs[p.id]}</textarea>
                                         <div class="char-count">Character count: <span id="char-count-${p.id}">${editedDMs[p.id].length}</span>/280</div>
@@ -1742,25 +1972,24 @@
                                             <span class="file-name" id="dm-file-name-${p.id}"></span>
                                         </div>
 
-                                        <button class="create-pres-btn" onclick="window.open('https://chatgpt.com/g/g-687f1127e25881918cab0e80dc5f0e39-bulkamania-presentation-creator', '_blank')">🎨 Create Presentation</button>
+                                        <button class="create-pres-btn" onclick="createPresentation(${p.id})">🎨 Create Presentation</button>
 
                                         <div class="action-buttons">
-                                            <button class="btn-primary" onclick="openInstagram(${p.id})">Open Instagram</button>
+                                            <button class="btn-primary" style="background: linear-gradient(135deg, #E1306C 0%, #C13584 50%, #833AB4 100%);" onclick="dmInstagram(${p.id})">📱 DM Instagram</button>
                                             <button class="btn-secondary" onclick="copyDM(${p.id})">📋 Copy DM</button>
                                         </div>
 
                                         <div class="workflow-steps">
                                             <strong>Workflow:</strong><br>
                                             1. Create presentation with GPT<br>
-                                            2. Copy DM<br>
-                                            3. Open Instagram<br>
-                                            4. Paste DM + attach file
+                                            2. Click DM Instagram (copies message & opens Instagram)<br>
+                                            3. Paste DM + attach file
                                         </div>
                                     </div>
-                                </div>
+                                </div>` : ''}
 
                                 <!-- LinkedIn Tab Content -->
-                                <div class="outreach-tab-content tab-linkedin">
+                                ${p.linkedin ? `<div class="outreach-tab-content tab-linkedin">
                                     <div class="dm-section" style="border: none; padding: 0; background: transparent;">
                                         <textarea class="dm-textarea" id="li-dm-body-${p.id}" placeholder="LinkedIn DM text">${editedLinkedInDMs[p.id]}</textarea>
                                         <div class="char-count">Character count: <span id="li-char-count-${p.id}">${editedLinkedInDMs[p.id].length}</span>/280</div>
@@ -1771,22 +2000,21 @@
                                             <span class="file-name" id="li-file-name-${p.id}"></span>
                                         </div>
 
-                                        <button class="create-pres-btn" onclick="window.open('https://chatgpt.com/g/g-687f1127e25881918cab0e80dc5f0e39-bulkamania-presentation-creator', '_blank')">🎨 Create Presentation</button>
+                                        <button class="create-pres-btn" onclick="createPresentation(${p.id})">🎨 Create Presentation</button>
 
                                         <div class="action-buttons">
-                                            <button class="btn-primary" style="background: linear-gradient(135deg, #0077B5 0%, #005885 100%);" onclick="openLinkedIn(${p.id})">Open LinkedIn</button>
+                                            <button class="btn-primary" style="background: linear-gradient(135deg, #0077B5 0%, #005885 100%);" onclick="dmLinkedIn(${p.id})">💼 DM LinkedIn</button>
                                             <button class="btn-secondary" onclick="copyLinkedInDM(${p.id})">📋 Copy LinkedIn DM</button>
                                         </div>
 
                                         <div class="workflow-steps">
                                             <strong>Workflow:</strong><br>
                                             1. Create presentation with GPT<br>
-                                            2. Copy DM<br>
-                                            3. Open LinkedIn<br>
-                                            4. Connect + paste DM + attach file
+                                            2. Click DM LinkedIn (copies message & opens LinkedIn)<br>
+                                            3. Paste DM + attach file
                                         </div>
                                     </div>
-                                </div>
+                                </div>` : ''}
                             </div>
 
                             <!-- Quick Buttons -->
@@ -1858,16 +2086,12 @@
             countRatings();
             const card = document.querySelector(`[data-id="${id}"]`);
             card.className = card.className.replace(/closed-won|closed-lost|contacted/, '');
-            if (status === 'Closed Won') {
-                card.classList.add('closed-won');
-            } else if (status === 'Closed Lost') {
-                card.classList.add('closed-lost');
-            } else if (status === 'Contacted') {
+            if (status !== 'Not Contacted') {
                 card.classList.add('contacted');
             }
             document.querySelectorAll(`[data-id="${id}"] .status-btn`).forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.textContent.includes(status) || (status === 'Not Contacted' && btn.textContent === 'Not Contacted')) {
+                if (btn.textContent === status) {
                     btn.classList.add('active');
                 }
             });
@@ -1880,15 +2104,14 @@
             document.getElementById('progress-fill').style.width = percent + '%';
 
             const notContacted = Object.values(leadStatuses).filter(s => s === 'Not Contacted').length;
-            const followUp = Object.values(leadStatuses).filter(s => s === 'Follow Up').length;
-            const closedWon = Object.values(leadStatuses).filter(s => s === 'Closed Won').length;
-            const closedLost = Object.values(leadStatuses).filter(s => s === 'Closed Lost').length;
+            const contactedOnly = Object.values(leadStatuses).filter(s => s === 'Contacted').length;
+            const emailSent = Object.values(leadStatuses).filter(s => s === 'Email Sent').length;
+            const phoneFollowUp = Object.values(leadStatuses).filter(s => s === 'Phone Call Follow Up').length;
 
             document.getElementById('footer-not-contacted').textContent = notContacted;
-            document.getElementById('footer-contacted').textContent = contacted - followUp - closedWon - closedLost;
-            document.getElementById('footer-followup').textContent = followUp;
-            document.getElementById('footer-closed-won').textContent = closedWon;
-            document.getElementById('footer-closed-lost').textContent = closedLost;
+            document.getElementById('footer-contacted').textContent = contactedOnly;
+            document.getElementById('footer-email-sent').textContent = emailSent;
+            document.getElementById('footer-phone-followup').textContent = phoneFollowUp;
             syncCompactCounters();
         }
 
@@ -1939,6 +2162,18 @@
             window.open(prospect.instagram, '_blank');
         }
 
+        function dmInstagram(id) {
+            const dm = document.getElementById(`dm-body-${id}`).value;
+            const prospect = prospects.find(p => p.id === id);
+            navigator.clipboard.writeText(dm).then(() => {
+                const btn = event.target;
+                const original = btn.innerHTML;
+                btn.innerHTML = '✅ Message Copied! Opening Instagram...';
+                setTimeout(() => { btn.innerHTML = original; }, 3000);
+                window.open(prospect.instagram, '_blank');
+            });
+        }
+
         function copyDM(id) {
             const dm = document.getElementById(`dm-body-${id}`).value;
             navigator.clipboard.writeText(dm).then(() => {
@@ -1954,6 +2189,45 @@
         function openLinkedIn(id) {
             const prospect = prospects.find(p => p.id === id);
             window.open(prospect.linkedin, '_blank');
+        }
+
+        function createPresentation(id) {
+            const prospect = prospects.find(p => p.id === id);
+            const companyName = prospect.company.replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_');
+            // Try to download company logo from their website
+            try {
+                const domain = new URL(prospect.website).hostname;
+                // Use Google's favicon service for high-res logo
+                const logoUrl = `https://logo.clearbit.com/${domain}`;
+                const fallbackUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
+                const link = document.createElement('a');
+                link.href = logoUrl;
+                link.download = `${companyName}_logo.png`;
+                link.target = '_blank';
+                // Try clearbit first, fallback to google favicons
+                fetch(logoUrl, { mode: 'no-cors' }).then(() => {
+                    link.click();
+                }).catch(() => {
+                    link.href = fallbackUrl;
+                    link.click();
+                });
+            } catch(e) {
+                console.log('Could not download logo:', e);
+            }
+            // Open the Bulkamania Presentation Creator GPT
+            window.open('https://chatgpt.com/g/g-687f1127e25881918cab0e80dc5f0e39-bulkamania-presentation-creator', '_blank');
+        }
+
+        function dmLinkedIn(id) {
+            const dm = document.getElementById(`li-dm-body-${id}`).value;
+            const prospect = prospects.find(p => p.id === id);
+            navigator.clipboard.writeText(dm).then(() => {
+                const btn = event.target;
+                const original = btn.innerHTML;
+                btn.innerHTML = '✅ Message Copied! Opening LinkedIn...';
+                setTimeout(() => { btn.innerHTML = original; }, 3000);
+                window.open(prospect.linkedin, '_blank');
+            });
         }
 
         function copyLinkedInDM(id) {
