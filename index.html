@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bulkamania Promotions - Daily Prospect Dashboard | March 18, 2026</title>
+    <title>Bulkamania Promotions - Sales Prospect Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -12,24 +12,38 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f5f5;
             color: #333;
+            line-height: 1.6;
         }
 
+        /* STICKY HEADER */
         .header {
+            position: sticky;
+            top: 0;
             background: #1a1a1a;
             color: white;
             padding: 10px 20px;
+            border-bottom: 3px solid #cc0000;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.collapsed {
+            padding: 6px 20px;
+        }
+
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            flex-wrap: wrap;
+            margin-bottom: 10px;
+            transition: margin-bottom 0.3s ease;
+        }
+
+        .header.collapsed .header-top {
+            margin-bottom: 0;
         }
 
         .header-left {
@@ -38,591 +52,581 @@
             gap: 15px;
         }
 
-        .logo {
+        .logo-img {
             height: 32px;
+            width: auto;
+            transition: height 0.3s ease;
+        }
+
+        .header.collapsed .logo-img {
+            height: 24px;
         }
 
         .header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .header-title h1 {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 700;
             white-space: nowrap;
+            transition: font-size 0.3s ease;
         }
 
-        .header-date {
+        .header.collapsed .header-title h1 {
+            font-size: 14px;
+        }
+
+        .header-title .date {
             font-size: 12px;
-            color: #ccc;
+            color: #bbb;
+            transition: opacity 0.3s ease;
         }
 
-        .progress-tracker {
-            display: flex;
-            gap: 20px;
-            font-size: 13px;
-            align-items: center;
+        .header.collapsed .header-title .date {
+            display: none;
         }
 
-        .progress-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .progress-badge {
-            background: #333;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        .hot { color: #cc0000; }
-        .warm { color: #ff8c00; }
-        .cool { color: #0066cc; }
-
-        .header-controls {
+        .header-actions {
             display: flex;
             gap: 10px;
+            align-items: center;
+        }
+
+        .presentation-btn {
+            background: #cc0000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .presentation-btn:hover {
+            background: #aa0000;
+            transform: translateY(-1px);
+        }
+
+        .header.collapsed .presentation-btn {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .header-info {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .header.collapsed .header-info {
+            display: none;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #cc0000;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #bbb;
+            margin-top: 2px;
+        }
+
+        .progress-container {
+            width: 150px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #cc0000, #ff6666);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 11px;
+            color: #bbb;
+            text-align: center;
+        }
+
+        /* COLLAPSED HEADER CONTROLS */
+        .collapsed-controls {
+            display: none;
+            gap: 8px;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        .search-box {
-            padding: 6px 12px;
-            border: 1px solid #555;
-            border-radius: 4px;
-            background: #2a2a2a;
-            color: white;
-            font-size: 13px;
-            min-width: 180px;
+        .header.collapsed .collapsed-controls {
+            display: flex;
         }
 
-        .search-box::placeholder {
-            color: #888;
-        }
-
-        .filter-btn {
-            padding: 6px 12px;
+        .filter-button {
             background: #333;
-            border: 1px solid #555;
-            border-radius: 4px;
             color: white;
+            border: 1px solid #555;
+            padding: 4px 8px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
-            white-space: nowrap;
+            font-size: 11px;
+            transition: all 0.2s;
         }
 
-        .filter-btn:hover {
-            background: #444;
-        }
-
-        .filter-btn.active {
+        .filter-button.active {
             background: #cc0000;
             border-color: #cc0000;
         }
 
-        .btn-primary {
-            padding: 8px 16px;
-            background: #cc0000;
-            color: white;
-            border: none;
+        .filter-button:hover {
+            border-color: #cc0000;
+        }
+
+        .search-input {
+            padding: 4px 8px;
+            border: 1px solid #555;
             border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
+            background: #333;
+            color: white;
+            font-size: 12px;
+            width: 120px;
+        }
+
+        .search-input::placeholder {
+            color: #999;
+        }
+
+        /* FILTER BAR */
+        .filter-bar {
+            background: #f0f0f0;
+            padding: 12px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .filter-bar label {
+            display: flex;
+            gap: 8px;
+            align-items: center;
             font-size: 13px;
-            transition: background 0.2s;
+            font-weight: 600;
         }
 
-        .btn-primary:hover {
-            background: #990000;
+        .filter-bar input[type="radio"] {
+            cursor: pointer;
         }
 
+        .filter-bar input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+            width: 250px;
+        }
+
+        /* CONTAINER */
         .container {
             max-width: 1400px;
-            margin: 20px auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .leads-grid {
+        /* CARDS GRID */
+        .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(1000px, 1fr));
             gap: 20px;
         }
 
-        .lead-card {
+        .prospect-card {
             background: white;
+            border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-left: 4px solid #ddd;
-            transition: box-shadow 0.2s;
+            grid-template-columns: 1fr 400px;
+            transition: all 0.2s;
         }
 
-        .lead-card:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        .prospect-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: #cc0000;
         }
 
-        .lead-card.hot {
-            border-left-color: #cc0000;
+        .prospect-card.hidden {
+            display: none;
         }
 
-        .lead-card.warm {
-            border-left-color: #ff8c00;
-        }
-
-        .lead-card.cool {
-            border-left-color: #0066cc;
-        }
-
-        .lead-info {
+        /* CARD LEFT PANEL */
+        .card-left {
             padding: 20px;
             border-right: 1px solid #eee;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 10px;
         }
 
         .company-name {
             font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .deal-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            color: white;
-        }
-
-        .deal-badge.hot {
-            background: #cc0000;
-        }
-
-        .deal-badge.warm {
-            background: #ff8c00;
-        }
-
-        .deal-badge.cool {
-            background: #0066cc;
-        }
-
-        .info-row {
-            display: flex;
-            gap: 8px;
-            font-size: 13px;
-            margin-bottom: 6px;
-            color: #555;
-        }
-
-        .info-label {
-            font-weight: bold;
-            color: #333;
-            min-width: 80px;
-        }
-
-        .contact-links {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-
-        .contact-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 10px;
-            background: #f0f0f0;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #0066cc;
-            font-size: 12px;
+            font-weight: 700;
+            color: #1a1a1a;
             cursor: pointer;
-            border: none;
-            transition: background 0.2s;
+            word-break: break-word;
+            flex: 1;
         }
 
-        .contact-link:hover {
-            background: #e0e0e0;
+        .company-name:hover {
+            color: #cc0000;
+            text-decoration: underline;
         }
 
-        .buying-signals {
-            background: #fffbcc;
-            border-left: 3px solid #ffcc00;
-            padding: 10px;
-            margin-bottom: 12px;
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 12px;
-            line-height: 1.5;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 4px;
         }
 
-        .buying-signals strong {
-            color: #cc8800;
+        .badge-distance {
+            background: #e8f4f8;
+            color: #0066aa;
         }
 
-        .events-section {
-            background: #f9f9f9;
-            padding: 8px 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 12px;
+        .badge-employees {
+            background: #f0e8f8;
+            color: #6633aa;
         }
 
-        .events-section strong {
-            display: block;
-            margin-bottom: 4px;
-            color: #333;
+        .badge-hot {
+            background: #ffcccc;
+            color: #cc0000;
         }
 
-        .door-opener {
-            background: #f0f8ff;
-            padding: 8px 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 12px;
-            border-left: 3px solid #0066cc;
+        .badge-warm {
+            background: #ffe8cc;
+            color: #cc6600;
         }
 
-        .door-opener strong {
+        .badge-cool {
+            background: #cce8ff;
             color: #0066cc;
-            display: block;
-            margin-bottom: 4px;
+        }
+
+        .badge-active {
+            background: #ccffcc;
+            color: #006600;
+        }
+
+        .badge-moderate {
+            background: #fff8cc;
+            color: #996600;
         }
 
         .rating-stars {
+            display: flex;
+            gap: 2px;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .info-section {
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            color: #333;
+            word-break: break-word;
+        }
+
+        .info-value a {
+            color: #0066aa;
+            text-decoration: none;
+        }
+
+        .info-value a:hover {
+            text-decoration: underline;
+        }
+
+        .buying-signals {
+            background: #fffacd;
+            border-left: 3px solid #ffd700;
+            padding: 8px 10px;
+            margin: 10px 0;
+            border-radius: 3px;
             font-size: 12px;
-            margin-bottom: 8px;
+            color: #333;
         }
 
-        .social-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 10px;
+        .comments-box {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #555;
         }
 
-        .social-badge.active {
-            background: #e8f5e9;
-            color: #2e7d32;
+        .collapsible-header {
+            cursor: pointer;
+            font-weight: 600;
+            color: #1a1a1a;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            margin: 8px 0;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .social-badge.moderate {
-            background: #fff3e0;
-            color: #e65100;
+        .collapsible-header:hover {
+            background: #e8e8e8;
         }
 
-        .social-badge.low {
-            background: #f3e5f5;
-            color: #6a1b9a;
+        .collapsible-content {
+            display: none;
+            padding: 8px;
+            background: #fafafa;
+            border-radius: 3px;
+            margin: 4px 0;
         }
 
-        .action-panel {
-            padding: 20px;
+        .collapsible-content.expanded {
+            display: block;
+        }
+
+        /* CARD RIGHT PANEL */
+        .card-right {
+            padding: 15px;
+            background: #fafafa;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            background: #fafafa;
+            gap: 12px;
+            overflow-y: auto;
+            max-height: 600px;
         }
 
         .status-tracker {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
         }
 
         .status-btn {
-            padding: 6px 8px;
-            border: 1px solid #ddd;
+            padding: 6px 4px;
+            border: 1px solid #ccc;
             background: white;
-            border-radius: 4px;
+            color: #333;
+            border-radius: 3px;
             cursor: pointer;
             font-size: 11px;
-            font-weight: bold;
+            font-weight: 600;
+            text-align: center;
             transition: all 0.2s;
-            text-transform: uppercase;
         }
 
         .status-btn:hover {
-            border-color: #666;
+            border-color: #cc0000;
+            color: #cc0000;
         }
 
-        .status-btn.active {
-            background: #333;
+        .status-btn.selected {
+            background: #cc0000;
             color: white;
-            border-color: #333;
+            border-color: #cc0000;
         }
 
-        .email-section {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 4px;
-            background: white;
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .email-section h4 {
-            font-size: 12px;
-            margin-bottom: 8px;
-            color: #333;
+        .input-group label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
         }
 
-        .email-input {
-            width: 100%;
+        .input-group input[type="text"],
+        .input-group textarea {
             padding: 6px;
-            margin-bottom: 6px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             border-radius: 3px;
             font-size: 12px;
             font-family: inherit;
+            resize: vertical;
         }
 
-        .email-textarea {
-            width: 100%;
-            padding: 6px;
-            margin-bottom: 6px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 11px;
+        .input-group textarea {
+            min-height: 60px;
             font-family: 'Courier New', monospace;
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .email-buttons {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            font-size: 11px;
-        }
-
-        .btn-small {
-            flex: 1;
-            min-width: 60px;
-            padding: 5px 8px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-
-        .btn-small:hover {
-            background: #333;
-            color: white;
-            border-color: #333;
-        }
-
-        .btn-small.gmail {
-            background: #EA4335;
-            color: white;
-            border-color: #EA4335;
-        }
-
-        .btn-small.gmail:hover {
-            background: #c5221f;
-        }
-
-        .dm-section {
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 4px;
-            background: white;
-        }
-
-        .dm-section h4 {
-            font-size: 12px;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        .dm-textarea {
-            width: 100%;
-            padding: 6px;
-            margin-bottom: 6px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 11px;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 60px;
-        }
-
-        .char-count {
-            font-size: 10px;
-            color: #888;
-            margin-bottom: 6px;
-        }
-
-        .dm-buttons {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            font-size: 11px;
-        }
-
-        .btn-insta {
-            flex: 1;
-            min-width: 50px;
-            padding: 5px 8px;
-            background: linear-gradient(135deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: opacity 0.2s;
-        }
-
-        .btn-insta:hover {
-            opacity: 0.8;
-        }
-
-        .btn-linkedin {
-            flex: 1;
-            min-width: 50px;
-            padding: 5px 8px;
-            background: #0a66c2;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: opacity 0.2s;
-        }
-
-        .btn-linkedin:hover {
-            opacity: 0.8;
-        }
-
-        .quick-actions {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-action {
-            flex: 1;
-            padding: 6px;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-
-        .btn-action:hover {
-            background: #e0e0e0;
-        }
-
-        .collapsible-section {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-            background: white;
-        }
-
-        .collapsible-header {
-            padding: 10px;
-            background: #f5f5f5;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.2s;
-        }
-
-        .collapsible-header:hover {
-            background: #eee;
-        }
-
-        .collapsible-content {
-            padding: 10px;
-            display: none;
-            border-top: 1px solid #ddd;
-        }
-
-        .collapsible-content.active {
-            display: block;
-        }
-
-        .collapsible-toggle {
-            font-size: 14px;
-            transition: transform 0.2s;
-        }
-
-        .collapsible-toggle.active {
-            transform: rotate(180deg);
-        }
-
-        .notes-textarea {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 11px;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 60px;
         }
 
         .file-upload {
-            font-size: 11px;
-        }
-
-        .file-upload input {
-            font-size: 10px;
-        }
-
-        .export-btn {
-            width: 100%;
-            padding: 8px;
-            background: #1a1a1a;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            padding: 6px;
+            border: 1px dashed #ccc;
+            border-radius: 3px;
+            text-align: center;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            transition: background 0.2s;
+            font-size: 11px;
+            background: #fefefe;
+            transition: all 0.2s;
         }
 
-        .export-btn:hover {
-            background: #333;
+        .file-upload:hover {
+            border-color: #cc0000;
+            background: #fff9f9;
         }
 
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+
+        .action-btn {
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            background: white;
+            color: #333;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .action-btn:hover {
+            background: #f0f0f0;
+            border-color: #999;
+        }
+
+        .action-btn.primary {
+            background: #cc0000;
+            color: white;
+            border-color: #cc0000;
+        }
+
+        .action-btn.primary:hover {
+            background: #aa0000;
+            border-color: #aa0000;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 4px;
+        }
+
+        .char-count {
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+        }
+
+        .reset-link {
+            color: #0066aa;
+            cursor: pointer;
+            font-size: 11px;
+            text-decoration: underline;
+        }
+
+        .reset-link:hover {
+            color: #cc0000;
+        }
+
+        /* FOOTER */
         .footer {
             background: #1a1a1a;
             color: white;
             padding: 20px;
             text-align: center;
+            border-top: 3px solid #cc0000;
             margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .footer-stats {
             display: flex;
+            gap: 20px;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 15px;
             font-size: 13px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .footer-shortcuts {
-            font-size: 11px;
-            color: #ccc;
+            font-size: 12px;
+            color: #bbb;
+            line-height: 1.6;
         }
 
-        .hidden {
-            display: none;
-        }
-
+        /* TOAST */
         #copyToast {
             position: fixed;
             bottom: 30px;
@@ -633,853 +637,510 @@
             padding: 10px 24px;
             border-radius: 8px;
             font-size: 14px;
-            z-index: 9999;
+            z-index: 10000;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
         }
 
+        /* RESPONSIVE */
         @media (max-width: 1200px) {
-            .leads-grid {
+            .prospect-card {
                 grid-template-columns: 1fr;
+            }
+
+            .card-left {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+
+            .card-right {
+                max-height: none;
             }
         }
 
         @media (max-width: 768px) {
             .header {
-                flex-direction: column;
-                align-items: flex-start;
+                padding: 8px 12px;
             }
 
-            .header-controls {
-                width: 100%;
-            }
-
-            .search-box {
-                width: 100%;
-            }
-
-            .progress-tracker {
+            .header-top {
                 flex-wrap: wrap;
+                margin-bottom: 8px;
             }
 
-            .lead-card {
-                grid-template-columns: 1fr;
-            }
-
-            .lead-info {
-                border-right: none;
-                border-bottom: 1px solid #eee;
-            }
-        }
-
-        @media print {
-            .header-controls, .action-panel, .export-btn, .btn-primary {
+            .header-info {
                 display: none;
             }
 
-            .lead-card {
-                page-break-inside: avoid;
+            .filter-bar {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+
+            .filter-bar input[type="text"] {
+                width: 100%;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            .prospect-card {
+                margin: 0;
+            }
+
+            .card-left,
+            .card-right {
+                padding: 12px;
+                max-height: none;
+            }
+
+            .status-tracker {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .action-buttons {
                 grid-template-columns: 1fr;
             }
 
-            .lead-info {
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            .header,
+            .filter-bar,
+            .footer,
+            .card-right {
+                display: none;
+            }
+
+            .prospect-card {
+                grid-template-columns: 1fr;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .card-left {
                 border-right: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-left">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgMjAwIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjIwMCI+CiAgPHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMxYTFhMWEiLz4KICAKICW8Y2lyY2xlIGN4PSI5MCIgY3k9IjEwMCIgcj0iNDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2NjMDAwMCIgc3Ryb2tlLXdpZHRoPSI4Ii8+CiAgPHRzcGFuIGQ9Ik02MCAxMDAgTDEyMCAxMDAiIHN0cm9rZT0iI2NjMDAwMCIgc3Ryb2tlLXdpZHRoPSI4Ii8+CiAgCiAgPHRleHQgeD0iMjQwIiB5PSIxMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjaywgSW1wYWN0LCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjY4IiBmb250LXdlaWdodD0iOTAwIiBsZXR0ZXItc3BhY2luZz0iNCIgZmlsbD0id2hpdGUiPkJVTEs8L3RleHQ+CiAgPHRleHQgeD0iNDgwIiB5PSIxMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjaywgSW1wYWN0LCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjY4IiBmb250LXdlaWdodD0iOTAwIiBsZXR0ZXItc3BhY2luZz0iNCIgZmlsbD0iI2NjMDAwMCI+QU1BTklBPC90ZXh0Pgo8L3N2Zz4=" alt="Bulkamania" class="logo">
-            <div>
-                <div class="header-title">Bulkamania Promotions Daily Dashboard</div>
-                <div class="header-date">March 18, 2026 | 20 Prospects</div>
+    <!-- HEADER -->
+    <div class="header" id="header">
+        <div class="header-top">
+            <div class="header-left">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgMjAwIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjIwMCI+CiAgPHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMxYTFhMWEiLz4KICAKICAGIDX0ZXh0IHg9IjMwMCIgeT0iMTIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssIEltcGFjdCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1MiIgZm9udC13ZWlnaHQ9IjkwMCIgbGV0dGVyLXNwYWNpbmc9IjIiPgogICAgICA8dHNwYW4gZmlsbD0id2hpdGUiPkJVTEs8L3RzcGFuPjx0c3BhbiBmaWxsPSIjY2MwMDAwIj5BTUFOSUE8L3RzcGFuPgogICAgPC90ZXh0PgogICAgPHRleHQgeD0iMzAwIiB5PSIxNTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0id2hpdGUiIGxldHRlci1zcGFjaW5nPSIxMiI+UFJPTU9USU9OUzwvdGV4dD4KICAKPC9zdmc+" alt="Bulkamania" class="logo-img">
+                <div class="header-title">
+                    <h1>Bulkamania Promotions</h1>
+                    <div class="date">March 19, 2026</div>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <a href="https://chatgpt.com/g/g-687f1127e25881918cab0e80dc5f0e39-bulkamania-presentation-creator" target="_blank" class="presentation-btn">🎨 Create Presentation</a>
             </div>
         </div>
 
-        <div class="progress-tracker">
-            <div class="progress-item">
-                <strong>Contacted:</strong>
-                <span class="progress-badge" id="contactedCount">0/20</span>
+        <div class="header-info" id="headerInfo">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text"><span id="progressText">0/20</span> prospects</div>
             </div>
-            <div class="progress-item">
-                <strong><span class="hot">●</span> Hot:</strong>
-                <span class="progress-badge" id="hotCount">8</span>
+            <div class="stat-item">
+                <div class="stat-number" id="hotCount">0</div>
+                <div class="stat-label">Hot Leads</div>
             </div>
-            <div class="progress-item">
-                <strong><span class="warm">●</span> Warm:</strong>
-                <span class="progress-badge" id="warmCount">9</span>
+            <div class="stat-item">
+                <div class="stat-number" id="warmCount">0</div>
+                <div class="stat-label">Warm Leads</div>
             </div>
-            <div class="progress-item">
-                <strong><span class="cool">●</span> Cool:</strong>
-                <span class="progress-badge" id="coolCount">3</span>
+            <div class="stat-item">
+                <div class="stat-number" id="coolCount">0</div>
+                <div class="stat-label">Cool Leads</div>
             </div>
         </div>
 
-        <div class="header-controls">
-            <input type="text" class="search-box" id="searchInput" placeholder="Search companies...">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="hot">Hot Deals</button>
-            <button class="filter-btn" data-filter="warm">Warm Leads</button>
-            <button class="filter-btn" data-filter="cool">Cool Prospects</button>
-            <a href="https://chatgpt.com/g/g-687f1127e25881918cab0e80dc5f0e39-bulkamania-presentation-creator" target="_blank" class="btn-primary">Create Presentation</a>
+        <div class="collapsed-controls" id="collapsedControls">
+            <button class="filter-button active" data-filter="all">All</button>
+            <button class="filter-button" data-filter="hot">🔥 Hot</button>
+            <button class="filter-button" data-filter="warm">🟠 Warm</button>
+            <button class="filter-button" data-filter="cool">🔵 Cool</button>
+            <input type="text" class="search-input" id="collapsedSearch" placeholder="Search...">
+            <a href="https://chatgpt.com/g/g-687f1127e25881918cab0e80dc5f0e39-bulkamania-presentation-creator" target="_blank" class="presentation-btn" style="padding: 4px 8px; font-size: 11px;">🎨 Create</a>
         </div>
     </div>
 
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+        <label>
+            <input type="radio" name="dealFilter" value="all" checked> All Leads
+        </label>
+        <label>
+            <input type="radio" name="dealFilter" value="hot"> 🔥 Hot
+        </label>
+        <label>
+            <input type="radio" name="dealFilter" value="warm"> 🟠 Warm
+        </label>
+        <label>
+            <input type="radio" name="dealFilter" value="cool"> 🔵 Cool
+        </label>
+        <input type="text" id="searchInput" placeholder="Search by company name or contact...">
+    </div>
+
+    <!-- MAIN CONTAINER -->
     <div class="container">
-        <div class="leads-grid" id="leadsGrid"></div>
+        <div class="cards-grid" id="cardsGrid"></div>
     </div>
 
+    <!-- FOOTER -->
     <div class="footer">
-        <div class="footer-stats">
-            <div><strong>Total Prospects:</strong> 20</div>
-            <div><strong>Hot Deals:</strong> <span id="footerHot">8</span></div>
-            <div><strong>Warm Leads:</strong> <span id="footerWarm">9</span></div>
-            <div><strong>Cool Prospects:</strong> <span id="footerCool">3</span></div>
-            <button class="btn-primary" onclick="exportAllLeads()">Export All Leads</button>
-        </div>
-        <div class="footer-shortcuts">
-            <strong>Keyboard Shortcuts:</strong> Ctrl+F (Search) | Ctrl+P (Print) | Click company names for LinkedIn
+        <div class="footer-content">
+            <div class="footer-buttons">
+                <button class="action-btn primary" onclick="exportAllCSV()">📥 Export All (CSV)</button>
+                <button class="action-btn" onclick="window.print()">🖨️ Print Dashboard</button>
+            </div>
+            <div class="footer-stats">
+                <div>Total Prospects: <strong id="totalCount">20</strong></div>
+                <div>Contacted: <strong id="contactedCount">0</strong></div>
+                <div>Follow Up: <strong id="followUpCount">0</strong></div>
+                <div>Closed Won: <strong id="wonCount">0</strong></div>
+            </div>
+            <div class="footer-shortcuts">
+                <strong>Keyboard Shortcuts:</strong> Ctrl+S to search | Click company name to visit website | Scroll to collapse/expand header
+            </div>
         </div>
     </div>
 
     <script>
-        const leads = [
-            {
-                id: 1,
-                name: "Nestlé Canada",
-                address: "25 Sheppard Ave W, North York, ON M2N 6S8",
-                distance: "5.2 km",
-                employees: "10,000+",
-                industry: "Food manufacturing",
-                contact: "Marketing team",
-                phone: "416-218-3030",
-                email: "corporate.affairs@ca.nestle.com",
-                deal: "hot",
-                googleRating: "3.8★",
-                socialActivity: "active",
-                instagram: "@nestlecanada",
-                instagramFollowers: "5.7K",
-                linkedin: "linkedin.com/company/nestle-canada",
-                buyingSignals: "Always running campaigns, major brand presence",
-                events: "Regular trade shows, sponsorships",
-                doorOpener: "Branded mug set with Nestlé logo",
-                mockup: "Coffee mugs, polo shirts in Nestlé red/white, tote bags",
-                emailSubject: "Nestle Canada - Premium Branded Merchandise Partnership",
-                emailBody: "Hi Nestlé Canada Marketing Team,\n\nI've been following your impressive campaign presence and Olympic athlete partnerships. With 10,000+ team members and constant brand activations, I thought this would be perfect timing.\n\nBulkamania Promotions specializes in high-quality branded merchandise that major brands like yours use to amplify their marketing reach. We're currently offering premium coffee mugs and polo sets that can feature your distinctive red/white branding.\n\nI've attached a mockup presentation showing our recent work with similar-sized brands. Would you be open to a brief conversation about how we can support your 2026 campaigns?\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Hey Nestlé Canada! 👋 Loving your campaign energy. We create premium branded merchandise that amplifies reach just like you do. Check out our mockup - think we could collaborate on something cool?",
-                linkedinDM: "Hi Nestlé Canada team! I've been impressed by your marketing campaigns and brand presence. We specialize in premium branded merch that major companies use to elevate their campaigns. Would love to chat about a potential partnership!"
-            },
-            {
-                id: 2,
-                name: "Maple Leaf Foods",
-                address: "6897 Financial Dr, Mississauga, ON L5N 0A8",
-                distance: "28.5 km",
-                employees: "13,500",
-                industry: "Food processing",
-                contact: "Marketing team",
-                phone: "1-800-268-3708",
-                email: "corporate.secretary@mapleleaf.com",
-                deal: "hot",
-                googleRating: "3.5★",
-                socialActivity: "active",
-                instagram: "@mapleleaffoods",
-                instagramFollowers: "24K",
-                linkedin: "linkedin.com/company/maple-leaf-foods",
-                buyingSignals: "Official protein partner of Canadian Olympic Team, massive brand presence",
-                events: "Olympic sponsorship events, trade shows",
-                doorOpener: "Branded apron with Maple Leaf Foods logo",
-                mockup: "Aprons, chef hats, branded cooler bags in green/red",
-                emailSubject: "Maple Leaf Foods - Olympic-Caliber Branded Merchandise",
-                emailBody: "Hi Maple Leaf Foods Marketing Team,\n\nCongrats on being the official protein partner of the Canadian Olympic Team! That's a massive achievement for your brand. With 13,500 team members and Olympic-level visibility, branded merchandise is a key way to keep that momentum going.\n\nBulkamania Promotions has created premium branded aprons and chef gear for food companies at your scale. Our designs showcase your iconic green/red branding beautifully.\n\nI've attached mockups of our work and would love to discuss how we can support your Olympic sponsorship activations and internal team initiatives.\n\nLooking forward to connecting!\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Maple Leaf Foods - incredible to see you as Olympic protein partner! 🍁 We create branded aprons and team gear that compounds that prestige. Want to chat about collaboration?",
-                linkedinDM: "Hi Maple Leaf Foods! Your Olympic partnership is impressive. We specialize in branded apparel and merchandise for companies at your scale. Would love to explore how we can amplify your brand presence."
-            },
-            {
-                id: 3,
-                name: "PepsiCo Canada",
-                address: "2095 Matheson Blvd E, Mississauga, ON L4W 0G2",
-                distance: "24.3 km",
-                employees: "1,000-5,000",
-                industry: "Beverages & food",
-                contact: "Marketing team",
-                phone: "289-374-5000",
-                email: "consumer.relations@pepsico.com",
-                deal: "hot",
-                googleRating: "3.9★",
-                socialActivity: "active",
-                instagram: "@paborito.pepsico",
-                instagramFollowers: "Corporate",
-                linkedin: "linkedin.com/company/pepsico",
-                buyingSignals: "2026 Marketing Leadership Program, major events sponsor",
-                events: "Sports sponsorships, summer events",
-                doorOpener: "Branded water bottles with PepsiCo logo",
-                mockup: "Water bottles, t-shirts, baseball caps in Pepsi blue/red/white",
-                emailSubject: "PepsiCo Canada - 2026 Marketing Momentum with Branded Merch",
-                emailBody: "Hi PepsiCo Canada Marketing Team,\n\nI've been tracking your 2026 Marketing Leadership Program and sports sponsorships - your brand activation game is strong. PepsiCo's iconic blue/red/white branding deserves merchandise that matches that energy.\n\nBulkamania Promotions specializes in high-impact branded water bottles, t-shirts, and caps that turn your campaigns into tangible team moments. We've worked with major beverage brands to amplify their summer events and sports activations.\n\nI've attached a mockup showing how your branding translates across our products. Would love to discuss supporting your 2026 initiatives.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "PepsiCo Canada - love the energy you bring to summer campaigns! ☀️ We create branded water bottles and merch that fans actually want. Check out our mockup?",
-                linkedinDM: "Hi PepsiCo team! Your 2026 marketing vision is impressive. We create branded merchandise that complements sports sponsorships and summer activations perfectly. Would love to chat!"
-            },
-            {
-                id: 4,
-                name: "CRH Canada Group",
-                address: "2300 Steeles Ave W, Vaughan, ON L4K 5X6",
-                distance: "8.4 km",
-                employees: "2,669",
-                industry: "Concrete manufacturing",
-                contact: "HR/Marketing",
-                phone: "905-660-5006",
-                email: "marie.glenn@ca.crh.com",
-                deal: "warm",
-                googleRating: "3.2★",
-                socialActivity: "moderate",
-                instagram: "@crh_americas",
-                instagramFollowers: "2.6K",
-                linkedin: "linkedin.com/company/crh-canada",
-                buyingSignals: "Top Employer 2026, large workforce needing branded safety gear",
-                events: "Construction trade shows",
-                doorOpener: "Branded safety vest with CRH logo",
-                mockup: "Safety vests, hard hats, work polos in CRH blue",
-                emailSubject: "CRH Canada - Top Employer Branded Safety Gear",
-                emailBody: "Hi CRH Canada HR & Marketing Team,\n\nCongrats on being recognized as a Top Employer for 2026! With nearly 2,700 team members in the field, branded safety gear is a great way to boost team unity and brand visibility on job sites.\n\nBulkamania Promotions creates premium branded safety vests, hard hats, and work polos that your crews will actually appreciate wearing. Our CRH blue color matching is precise.\n\nI've attached mockups of our safety gear line. Would love to discuss how we can outfit your teams with branded safety equipment that represents your Top Employer status.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "CRH Canada - nice to see your Top Employer status! Your crews deserve branded safety gear that looks this good. Worth a quick chat? 🔨",
-                linkedinDM: "Hi CRH Canada! Congrats on Top Employer 2026. We specialize in branded safety equipment for construction teams. Would love to show you how we've equipped other major contractors."
-            },
-            {
-                id: 5,
-                name: "Conagra Brands Canada",
-                address: "2920 Matheson Blvd E, Unit 400, Mississauga, ON L4W 5R6",
-                distance: "24.8 km",
-                employees: "506",
-                industry: "Food manufacturing",
-                contact: "Marketing team",
-                phone: "1-800-461-4556",
-                email: "consumercare@conagrabrands.ca",
-                deal: "warm",
-                googleRating: "3.6★",
-                socialActivity: "moderate",
-                instagram: "@conagrabrands",
-                instagramFollowers: "6.4K",
-                linkedin: "linkedin.com/company/conagra-brands",
-                buyingSignals: "New Canadian HQ opened recently, growing brand portfolio",
-                events: "Food industry trade shows",
-                doorOpener: "Branded lunch tote with company logo",
-                mockup: "Tote bags, polo shirts, branded pens in Conagra red",
-                emailSubject: "Conagra Brands Canada - Launch Celebration Branded Merch",
-                emailBody: "Hi Conagra Brands Canada Marketing Team,\n\nExciting to see your new Canadian HQ launch! With a growing brand portfolio and 506 talented team members, branded merchandise is the perfect way to celebrate this milestone and build team culture.\n\nBulkamania Promotions specializes in branded lunch totes, polo shirts, and accessories that reflect your brand's quality. We've worked with food manufacturers on similar launches.\n\nI've attached mockups showing how your iconic red branding looks across our products. Perfect timing to outfit your new HQ team!\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Conagra Canada - congrats on the new HQ! 🎉 We create branded merch that celebrates launches like this. Check out our tote and polo mockups?",
-                linkedinDM: "Hi Conagra team! Love seeing your Canadian expansion. We create branded merchandise that's perfect for celebrating milestones like your new HQ. Let's chat!"
-            },
-            {
-                id: 6,
-                name: "World Vision Canada",
-                address: "1 World Dr, Mississauga, ON L5T 2Y4",
-                distance: "30.2 km",
-                employees: "499",
-                industry: "Non-profit/charity",
-                contact: "Communications team",
-                phone: "1-866-595-5550",
-                email: "info@worldvision.ca",
-                deal: "warm",
-                googleRating: "4.1★",
-                socialActivity: "active",
-                instagram: "@worldvisioncan",
-                instagramFollowers: "22K",
-                linkedin: "linkedin.com/company/world-vision-canada",
-                buyingSignals: "Charity event sponsorships, awareness campaigns need branded items",
-                events: "Charity galas, fundraising walks",
-                doorOpener: "Branded tote bag with World Vision logo",
-                mockup: "Tote bags, t-shirts, lanyards in World Vision orange",
-                emailSubject: "World Vision Canada - Amplify Impact with Branded Merchandise",
-                emailBody: "Hi World Vision Canada Communications Team,\n\nYour 22K social following shows real engagement! For every charity gala and fundraising walk, branded merchandise is a proven way to extend your reach and remind supporters of your mission.\n\nBulkamania Promotions creates high-quality branded tote bags, t-shirts, and lanyards in your signature orange that supporters will proudly wear and use.\n\nI've attached mockups that show how vibrant your brand looks across our product line. Let's discuss how we can amplify your 2026 awareness campaigns.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "World Vision Canada - love your mission and engagement! 🌍 Branded merch amplifies impact at events. Want to explore this for your walks and galas?",
-                linkedinDM: "Hi World Vision team! Your 22K social reach is impressive. We create branded merchandise that extends your mission impact. Would love to discuss partnership possibilities!"
-            },
-            {
-                id: 7,
-                name: "Magna International",
-                address: "337 Magna Dr, Aurora, ON L4G 7K1",
-                distance: "30.5 km",
-                employees: "158,000+ globally",
-                industry: "Automotive manufacturing",
-                contact: "Tracy Fuerst, Director, Corporate Communications",
-                phone: "905-726-2462",
-                email: "tracy.fuerst@magna.com",
-                deal: "hot",
-                googleRating: "3.9★",
-                socialActivity: "active",
-                instagram: "@magna_int",
-                instagramFollowers: "23K",
-                linkedin: "linkedin.com/company/magna-international",
-                buyingSignals: "Expanding operations, huge workforce, trade shows",
-                events: "Automotive industry events, charity golf tournaments",
-                doorOpener: "Branded mousepad with Magna logo",
-                mockup: "Polo shirts, jackets, branded USB drives in Magna red/grey",
-                emailSubject: "Magna International - Enterprise-Scale Branded Solutions",
-                emailBody: "Hi Magna International Corporate Communications Team,\n\nWith 158,000+ global team members and thousands here in the GTA, Magna represents automotive excellence. Your expansion initiatives deserve branded merchandise that matches your scale and impact.\n\nBulkamania Promotions has extensive experience with enterprise-level branded solutions - from polo shirts and jackets to tech accessories. We understand the complexity of global logistics and branding consistency.\n\nI've attached mockups showing our work with automotive sector leaders. Your charity golf tournaments and industry events deserve premium branded gear. Let's connect!\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Magna International - impressive global scale! 🚗 We've equipped major automotive companies with branded gear. Your team deserves premium solutions. Chat?",
-                linkedinDM: "Hi Magna team! Your scale and innovation in automotive is remarkable. We create enterprise-level branded merchandise that matches your caliber. Would love to explore options!"
-            },
-            {
-                id: 8,
-                name: "Oliver & Bonacini Hospitality",
-                address: "401 Bay St, Suite 900, Toronto, ON M5H 2Y4",
-                distance: "22.1 km",
-                employees: "1,500+",
-                industry: "Hospitality/restaurants",
-                contact: "Phil Wylie, VP People & Operations",
-                phone: "416-364-1211",
-                email: "phil.wylie@oliverbonacini.com",
-                deal: "warm",
-                googleRating: "4.5★",
-                socialActivity: "active",
-                instagram: "@oliverbonacini",
-                instagramFollowers: "24K",
-                linkedin: "linkedin.com/company/oliver-bonacini",
-                buyingSignals: "15 restaurants in Toronto, constant event hosting",
-                events: "Culinary events, galas, restaurant openings",
-                doorOpener: "Branded chef's apron with O&B logo",
-                mockup: "Chef aprons, server polo shirts, branded wine bags in O&B black/gold",
-                emailSubject: "Oliver & Bonacini - Premium Branded Hospitality Merch",
-                emailBody: "Hi Phil,\n\nWith 15 Toronto restaurants and constant culinary events, Oliver & Bonacini is a hospitality powerhouse. Your 1,500+ team members represent excellence - branded chef aprons and server gear elevate that professionalism.\n\nBulkamania Promotions specializes in premium hospitality branded merchandise. We've created chef aprons, server polos, and wine bag sets for restaurants at your caliber. Your black/gold branding looks stunning on our premium materials.\n\nI've attached mockups of our hospitality line. Would love to discuss outfitting your restaurants and events with branded merchandise that reflects the O&B standard.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "O&B - love what you've built in Toronto! 🍽️ Your restaurants deserve premium branded gear. Check out our chef apron and server polo mockups?",
-                linkedinDM: "Hi Phil and the O&B team! Your 15-restaurant empire is incredible. We create premium branded apparel for hospitality operations at your level. Would love to chat!"
-            },
-            {
-                id: 9,
-                name: "St. Joseph Communications",
-                address: "50 Macintosh Blvd, Vaughan, ON L4K 4P3",
-                distance: "10.1 km",
-                employees: "258",
-                industry: "Marketing/printing",
-                contact: "Marketing team",
-                phone: "905-660-3111",
-                email: "info@stjoseph.com",
-                deal: "warm",
-                googleRating: "3.7★",
-                socialActivity: "moderate",
-                instagram: "@stjosephcommunications",
-                instagramFollowers: "2.4K",
-                linkedin: "linkedin.com/company/st--joseph-communications",
-                buyingSignals: "Marketing/print company that understands branded products",
-                events: "Industry conferences",
-                doorOpener: "Branded notebook and pen set",
-                mockup: "Notebooks, pens, tote bags in SJC brand colors",
-                emailSubject: "St. Joseph Communications - Branded Merch from Print Experts",
-                emailBody: "Hi St. Joseph Communications Marketing Team,\n\nAs a marketing and printing company, you already understand the power of branded merchandise. With 258 team members and industry presence, it's time to turn that expertise inward.\n\nBulkamania Promotions creates premium branded notebooks, pens, and tote bags that marketing professionals like yourselves appreciate. We've partnered with creative agencies who get quality.\n\nI've attached mockups showing our professional line. Let's discuss how we can create branded merchandise that represents your printing excellence.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "St. Joseph Communications - you understand branding! 📝 Let's talk about branded notebooks and pens that reflect your agency's standards. Mockup attached?",
-                linkedinDM: "Hi St. Joseph team! As marketing experts, you know the power of branded merchandise. Let's create something premium for your team and clients."
-            },
-            {
-                id: 10,
-                companyName: "BASF Canada Inc.",
-                distance: "26.3 km",
-                distanceNum: 26.3,
-                employees: "1,040",
-                dealRating: "Warm",
-                website: "https://www.basf.com/ca/en",
-                instagram: "https://www.instagram.com/basf_agsolutions_ca/",
-                instagramHandle: "@basf_agsolutions_ca",
-                linkedin: "https://www.linkedin.com/company/basf/",
-                contactName: "Daniela Lopera",
-                contactTitle: "Communications Specialist",
-                email: "accounts_receivables@basf.com",
-                phone: "1-866-474-3538",
-                altContact: "LinkedIn, Twitter, corporate website contact form",
-                mutualConnections: "Recommend Paulo check manually",
-                googleRating: "3.6★",
-                socialActivity: "Moderate",
-                buyingSignals: "Top Employer 2026, 1,040 employees, large chemical manufacturing facility",
-                events: "Chemical industry trade shows, sustainability events",
-                doorOpener: "Branded safety goggles with BASF logo",
-                mockup: "Safety goggles, lab coats, branded polo shirts in BASF blue/white",
-                competitorNotes: "Chemical manufacturing — may have existing safety apparel supplier",
-                comments: "Top Employer 2026 recognition, Mississauga HQ, chemical manufacturing leader",
-                emailSubject: "BASF Canada — Top Employer Branded Safety & Team Gear",
-                emailBody: "Hi Daniela,\n\nCongratulations to BASF Canada on being named a Top Employer for 2026! With over 1,000 team members across your Canadian operations, branded safety gear and team apparel are a powerful way to reinforce that employer brand.\n\nI'm Paulo from Bulkamania Promotions — we're a GTA-based branded products company up in North York. We specialize in premium branded safety gear, polo shirts, and corporate apparel for companies at your scale.\n\nI've put together a quick mockup showing your BASF branding on some of our trending products — I think you'll love how it looks. Would you be open to a quick chat about outfitting your team?\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Hey BASF Canada! 🔬 Congrats on Top Employer 2026! We mocked up your logo on branded safety gear and polos — looks sharp! Would love to chat about outfitting your team.",
-                linkedinDM: "Hi Daniela! Congrats to BASF Canada on Top Employer 2026. We create branded safety gear and team apparel for companies at your scale. Would love to connect and show you our mockups!"
-            },
-            {
-                id: 11,
-                name: "Hyundai Auto Canada",
-                address: "75 Frontenac Dr, Markham, ON L3R 6H2",
-                distance: "26.8 km",
-                employees: "354",
-                industry: "Automotive",
-                contact: "Jenn McCarthy, National Manager PR",
-                phone: "416-770-0842",
-                email: "jenn.mccarthy@hyundaicanada.com",
-                deal: "hot",
-                googleRating: "4.0★",
-                socialActivity: "active",
-                instagram: "@hyundaicanada",
-                instagramFollowers: "71K",
-                linkedin: "linkedin.com/company/hyundai-auto-canada-corp",
-                buyingSignals: "Major marketing department changes, active campaigns",
-                events: "Auto shows, dealer events",
-                doorOpener: "Branded car air freshener set with Hyundai logo",
-                mockup: "Polo shirts, baseball caps, keychains in Hyundai blue/silver",
-                emailSubject: "Hyundai Canada - Auto Show Season Branded Merch Momentum",
-                emailBody: "Hi Jenn,\n\nI've been following your 71K social followers and active campaign presence - Hyundai's marketing team is firing on all cylinders. With 354 team members and upcoming auto shows, branded merchandise is a key activation tool.\n\nBulkamania Promotions has created branded car air freshener sets, polo shirts, and keychains for automotive companies. Your iconic blue/silver branding translates beautifully across our product line.\n\nI've attached mockups showing our automotive merch capabilities. Perfect timing for dealer events and auto show activations. Let's discuss how we can support your 2026 campaigns!\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Hyundai Canada - 71K strong! 🚙 Your auto shows deserve branded gear and car fresheners that stand out. Check our mockups? Perfect for dealer events!",
-                linkedinDM: "Hi Jenn! Your team's campaign energy is impressive. We create branded merchandise for auto shows and dealer events. Would love to collaborate on something!"
-            },
-            {
-                id: 12,
-                name: "Aviva Canada",
-                address: "10 Aviva Way, Suite 100, Markham, ON L6G 0G1",
-                distance: "27.2 km",
-                employees: "4,000+",
-                industry: "Insurance",
-                contact: "Marketing/Communications",
-                phone: "1-800-387-4518",
-                email: "askavivacanada@aviva.com",
-                deal: "hot",
-                googleRating: "3.6★",
-                socialActivity: "moderate",
-                instagram: "@avivacanada",
-                instagramFollowers: "5.8K",
-                linkedin: "linkedin.com/company/aviva-canada",
-                buyingSignals: "4,000+ employees = huge swag needs, top employer recognition",
-                events: "Broker events, charity runs",
-                doorOpener: "Branded umbrella with Aviva logo",
-                mockup: "Umbrellas, polo shirts, branded pens in Aviva yellow/blue",
-                emailSubject: "Aviva Canada - Top Employer Branded Merch Program",
-                emailBody: "Hi Aviva Canada Marketing & Communications Team,\n\nWith 4,000+ team members and Top Employer recognition, Aviva represents stability and care. Branded merchandise is a strategic tool to reinforce culture and client relationships.\n\nBulkamania Promotions specializes in large-scale branded programs. We've created umbrella sets, polo shirt fleets, and pen collections for major insurance and financial companies. Your yellow/blue branding stands out beautifully.\n\nI've attached mockups of our enterprise insurance solutions. Let's discuss how we can outfit your broker events, charity runs, and internal culture initiatives with branded merchandise that represents your Top Employer status.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Aviva Canada - impressive 4K+ team! 🌧️ Branded umbrellas and polos show you care. Let's chat about a merch program that supports your culture?",
-                linkedinDM: "Hi Aviva team! Congrats on Top Employer recognition. With your size and culture focus, branded merchandise is perfect. Would love to explore partnership options!"
-            },
-            {
-                id: 13,
-                name: "WK Kellogg Canada",
-                address: "5050 Satellite Dr, Suite 401, Mississauga, ON",
-                distance: "26.4 km",
-                employees: "345",
-                industry: "Breakfast cereal manufacturing",
-                contact: "Marketing team",
-                phone: "888-876-3750",
-                email: "consumeraffairs@wkkellogg.com",
-                deal: "warm",
-                googleRating: "3.8★",
-                socialActivity: "active",
-                instagram: "@wkkelloggcanada",
-                instagramFollowers: "5.2K",
-                linkedin: "linkedin.com/company/kellanov",
-                buyingSignals: "Brand-conscious food company, active social media",
-                events: "Food industry trade shows",
-                doorOpener: "Branded cereal bowl and spoon set",
-                mockup: "T-shirts, tote bags, branded mugs in Kellogg's red/green",
-                emailSubject: "WK Kellogg Canada - Breakfast Brand Momentum with Merch",
-                emailBody: "Hi WK Kellogg Canada Marketing Team,\n\nYour active social media presence and 5.2K followers show strong brand engagement. With 345 team members and food industry leadership, branded merchandise that celebrates your breakfast heritage is perfect.\n\nBulkamania Promotions creates fun, brand-conscious merch - cereal bowls and spoons, t-shirts, and mugs that resonate with food brands. Your iconic red/green branding looks fantastic across our product line.\n\nI've attached mockups showing how vibrant your brand looks on our merchandise. Perfect for trade shows and team culture. Let's discuss!\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "WK Kellogg Canada - love your breakfast brand energy! 🥣 Branded bowls, mugs, and tees that celebrate your heritage. Want to see our mockups?",
-                linkedinDM: "Hi WK Kellogg team! Your brand-first approach is inspiring. We create merchandise that captures that spirit. Would love to chat about a collab!"
-            },
-            {
-                id: 14,
-                name: "Ford Motor Company of Canada",
-                address: "1 The Canadian Rd, Oakville, ON L6J 5C7",
-                distance: "38.5 km",
-                employees: "7,000 in Canada",
-                industry: "Automotive",
-                contact: "Communications team",
-                phone: "1-800-565-3673",
-                email: "crccan@ford.com",
-                deal: "hot",
-                googleRating: "4.0★",
-                socialActivity: "active",
-                instagram: "@fordcanada",
-                instagramFollowers: "70K",
-                linkedin: "linkedin.com/company/ford-motor-company-of-canada",
-                buyingSignals: "Massive workforce, dealer network events, 400+ dealerships",
-                events: "Auto shows, dealer rallies, charity events",
-                doorOpener: "Branded USB car charger",
-                mockup: "Jackets, caps, branded keychains in Ford blue/white",
-                emailSubject: "Ford Canada - Dealer Network Branded Merchandise Strategy",
-                emailBody: "Hi Ford Motor Company of Canada Communications Team,\n\nWith 7,000 Canadian team members, 400+ dealerships, and 70K social followers, Ford represents automotive heritage and innovation. Branded merchandise across your dealer network is a proven strategy to strengthen relationships and amplify brand presence.\n\nBulkamania Promotions has created large-scale branded programs for automotive leaders. USB car chargers, jackets, caps, and keychains in Ford blue/white - all designed to support your dealer rallies and auto show presence.\n\nI've attached mockups of our automotive scale solutions. Let's discuss how we can outfit your massive dealer network with premium branded merchandise.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Ford Canada - 70K strong! 🚙 With 400+ dealers, branded jackets and chargers keep your network unified. Chat about scale solutions?",
-                linkedinDM: "Hi Ford team! Your dealer network scale is massive. We create branded merchandise programs for automotive leaders. Would love to explore partnership!"
-            },
-            {
-                id: 15,
-                name: "Signify Canada (Philips Lighting)",
-                address: "281 Hillmount Rd, Markham, ON L6C 2S3",
-                distance: "28.4 km",
-                employees: "500+",
-                industry: "Lighting manufacturing",
-                contact: "Marketing team",
-                phone: "905-927-4900",
-                email: "feedback@signify.com",
-                deal: "warm",
-                googleRating: "3.5★",
-                socialActivity: "moderate",
-                instagram: "signaboretly",
-                instagramFollowers: "Search",
-                linkedin: "linkedin.com/company/signifycompany",
-                buyingSignals: "Innovation-focused company, trade show presence",
-                events: "Lighting/tech trade shows",
-                doorOpener: "Branded LED flashlight keychain",
-                mockup: "Polo shirts, branded power banks, laptop sleeves in Signify green",
-                emailSubject: "Signify Canada - Innovation-Driven Branded Tech Merch",
-                emailBody: "Hi Signify Canada Marketing Team,\n\nYour innovation focus and tech trade show presence is impressive. With 500+ team members, branded merchandise that reflects your cutting-edge positioning is a smart move.\n\nBulkamania Promotions specializes in tech-forward branded merchandise - LED flashlight keychains, power banks, and laptop sleeves in Signify green. Innovation companies like yours appreciate quality and design.\n\nI've attached mockups showing our tech-focused line. Perfect for lighting industry trade shows and client appreciation. Let's connect!\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Signify Canada - innovation is your DNA! 💡 Tech merch like LED keychains and power banks shine at your trade shows. Check our mockups?",
-                linkedinDM: "Hi Signify team! Your innovation leadership deserves branded tech merchandise. We create smart merch for smart companies. Chat soon?"
-            },
-            {
-                id: 16,
-                name: "CCL Industries",
-                address: "111 Gordon Baker Rd, Suite 801, Toronto, ON M2H 3R1",
-                distance: "13.2 km",
-                employees: "10,000+ globally",
-                industry: "Specialty packaging",
-                contact: "Corporate team",
-                phone: "416-756-8500",
-                email: "corpaffairs@cclind.com",
-                deal: "hot",
-                googleRating: "3.7★",
-                socialActivity: "low",
-                instagram: "Has account",
-                instagramFollowers: "Search",
-                linkedin: "linkedin.com/company/ccl-industries",
-                buyingSignals: "10,000+ employees, 200+ facilities, always packaging-aware",
-                events: "Packaging industry conferences",
-                doorOpener: "Branded pen and notepad set",
-                mockup: "Polo shirts, branded USB drives, laptop bags in CCL blue",
-                emailSubject: "CCL Industries - Global Packaging Leader Branded Solutions",
-                emailBody: "Hi CCL Industries Corporate Team,\n\nWith 10,000+ employees and 200+ facilities globally, CCL Industries is the packaging industry leader. Your scale and innovation deserve branded merchandise that reflects that stature.\n\nBulkamania Promotions has created enterprise-level branded programs for global leaders. Branded pen sets, USB drives, and laptop bags in CCL blue - designed for your packaging conferences and global operations.\n\nI've attached mockups of our packaging-sector solutions. Let's discuss how we can create branded merchandise that represents CCL's global presence and industry leadership.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "CCL Industries - 10K+ global team! 📦 Packaging experts deserve premium branded gear. Laptop bags and USB drives that impress. Chat about scale solutions?",
-                linkedinDM: "Hi CCL team! Your global scale is remarkable. We create enterprise branded merchandise for packaging leaders. Would love to explore partnership!"
-            },
-            {
-                id: 17,
-                name: "AIG Insurance Company of Canada",
-                address: "120 Bremner Blvd, Suite 2200, Toronto, ON M5J 0A8",
-                distance: "23.8 km",
-                employees: "380",
-                industry: "Insurance",
-                contact: "HR team",
-                phone: "416-596-3000",
-                email: "aigcanada.ah@aig.com",
-                deal: "warm",
-                googleRating: "3.4★",
-                socialActivity: "low",
-                instagram: "AIG corporate",
-                instagramFollowers: "Search",
-                linkedin: "linkedin.com/company/aig-insurance-company-of-canada",
-                buyingSignals: "Top Employer 2026, unique museum membership program shows brand investment",
-                events: "Corporate events, team building",
-                doorOpener: "Branded notebook with AIG logo",
-                mockup: "Notebooks, polo shirts, branded pens in AIG blue/white",
-                emailSubject: "AIG Canada - Top Employer Culture Through Branded Merch",
-                emailBody: "Hi AIG Canada HR Team,\n\nYour Top Employer 2026 recognition and innovative museum membership program show real commitment to team culture. Branded merchandise is the perfect complement to those investments.\n\nBulkamania Promotions creates premium branded notebooks, polo shirts, and pens that reinforce company culture. Your AIG blue/white branding looks professional and sharp on our products.\n\nI've attached mockups of our corporate culture line. Let's discuss how we can support your team building and corporate events with branded merchandise that celebrates your Top Employer status.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "AIG Canada - love your Top Employer culture! 📚 Branded notebooks and polos show you care. Culture merch for your events? Let's chat!",
-                linkedinDM: "Hi AIG team! Your culture focus is impressive. We create branded merchandise that reinforces team pride. Would love to discuss options!"
-            },
-            {
-                id: 18,
-                name: "Revol Events",
-                address: "Toronto, ON (multiple locations)",
-                distance: "18.5 km",
-                employees: "40+ professionals",
-                industry: "Catering/events",
-                contact: "Sales team",
-                phone: "416-214-7844",
-                email: "catering@revolevents.com",
-                deal: "cool",
-                googleRating: "4.6★",
-                socialActivity: "active",
-                instagram: "@revolevents",
-                instagramFollowers: "1.2K",
-                linkedin: "linkedin.com/company/revolevents",
-                buyingSignals: "200+ corporate clients, event-focused = perfect for branded merch",
-                events: "They ARE the events company - branded uniforms, client gifts",
-                doorOpener: "Branded apron with Revol logo",
-                mockup: "Chef aprons, server polo shirts, branded tote bags in Revol brand colors",
-                emailSubject: "Revol Events - Branded Merch for 200+ Corporate Events",
-                emailBody: "Hi Revol Events Sales Team,\n\nWith 200+ corporate clients and a reputation for exceptional event experiences, branded merchandise is a natural extension of your value proposition. Branded aprons and server polos elevate every event.\n\nBulkamania Promotions specializes in event-industry branded merchandise. Chef aprons, server polos, and client gift totes - all customizable for your Revol brand. Perfect for amplifying each event experience.\n\nI've attached mockups showing how sharp your team looks in branded gear. Let's discuss how we can make branded merchandise a signature part of every Revol event.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Revol Events - 200+ amazing events! 🎉 Branded aprons and polos elevate every experience. Your team in our gear would be stunning. Chat about it?",
-                linkedinDM: "Hi Revol team! Your event portfolio is impressive. We create branded merchandise that enhances the experience. Would love to discuss options!"
-            },
-            {
-                id: 19,
-                name: "Food Dudes",
-                address: "Toronto, ON",
-                distance: "19.2 km",
-                employees: "50+ (seasonal)",
-                industry: "Catering",
-                contact: "Adrian Niman, Founder & Executive Chef",
-                phone: "647-340-3833",
-                email: "events@thefooddudes.com",
-                deal: "cool",
-                googleRating: "4.7★",
-                socialActivity: "active",
-                instagram: "@fooddudes",
-                instagramFollowers: "30K",
-                linkedin: "linkedin.com/company/the-food-dudes",
-                buyingSignals: "200+ corporate clients, 750+ events/year, growing to Miami",
-                events: "Major corporate events, fashion shows",
-                doorOpener: "Branded chef hat",
-                mockup: "Chef hats, aprons, branded tote bags",
-                emailSubject: "Food Dudes - Scale Your Success with Branded Chef Merch",
-                emailBody: "Hi Adrian,\n\nWith 750+ events per year, 30K Instagram followers, and expansion to Miami, Food Dudes is absolutely crushing it. Branded chef hats and aprons aren't just uniforms - they're your signature.\n\nBulkamania Promotions specializes in high-volume catering branded merchandise. We've created branded chef hats, aprons, and totes for growing catering companies at your momentum level.\n\nI've attached mockups showing how professional your brand looks across our chef line. Perfect for scaling your signature look across 750+ annual events. Let's discuss!\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Food Dudes - 30K strong! 👨‍🍳 750+ events/year deserve branded chef hats and aprons. Your signature look at scale. Chat about it?",
-                linkedinDM: "Hi Adrian! Your 750+ events per year growth is insane. Branded chef merch at that scale is a game-changer. Would love to help you scale!"
-            },
-            {
-                id: 20,
-                name: "Harley-Davidson Canada",
-                address: "Vaughan, ON",
-                distance: "11.5 km",
-                employees: "100+ (Canadian ops)",
-                industry: "Motorcycles",
-                contact: "Scott Winhold, Managing Director",
-                phone: "905-660-3500",
-                email: "hd.canada.hr@harley-davidson.com",
-                deal: "warm",
-                googleRating: "4.3★",
-                socialActivity: "active",
-                instagram: "@harleycanada",
-                instagramFollowers: "100K",
-                linkedin: "linkedin.com/company/harley-davidson",
-                buyingSignals: "Iconic brand, dealer events, riding community events",
-                events: "Rallies, dealer events, charity rides",
-                doorOpener: "Branded bandana with H-D Canada logo",
-                mockup: "Bandanas, t-shirts, branded mugs in Harley orange/black",
-                emailSubject: "Harley-Davidson Canada - Iconic Brand Merch for Rallies",
-                emailBody: "Hi Scott,\n\nWith 100K social followers and an iconic brand that commands loyalty, Harley-Davidson Canada's dealer network and riding community events are perfect for branded merchandise that celebrates the lifestyle.\n\nBulkamania Promotions creates branded bandanas, t-shirts, and mugs that resonate with the Harley riding community. Your iconic orange/black branding on our merch is absolutely distinctive.\n\nI've attached mockups showing how sharp branded gear looks for rallies and dealer events. Let's discuss how we can create signature branded merchandise for the H-D Canada community.\n\nBest regards,\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",
-                instagramDM: "Harley-Davidson Canada - 100K strong! 🏍️ Branded bandanas and tees for riders unite the community. Rally merch that stands out. Chat about it?",
-                linkedinDM: "Hi Scott! Your 100K community is legendary. Branded merch for rallies and dealer events creates connection. Would love to explore options!"
-            }
+        // DATA: All 20 Prospects
+        const prospects = [
+            {name:"Canon Canada Inc.",address:"8000 Mississauga Rd, Brampton, ON L6Y 0C1",distance:"18.5 km",employees:"500-1,000",website:"https://www.canon.ca",instagram:"@canoncanada",instagramUrl:"https://www.instagram.com/canoncanada/",linkedin:"https://ca.linkedin.com/company/canon-canada",contactName:"Not found — request Marketing Dept.",contactTitle:"Marketing / Product Strategy",contactEmail:"Not found — use general: corporate.inquiries@canon.ca",contactPhone:"(905) 795-1111",googleRating:"3.5",socialActivity:"Active",dealRating:"Hot",buyingSignals:"Recently investing in $54M e-commerce marketing push; actively hiring marketing specialists in Brampton",doorOpener:"Branded camera lens cleaning kit or branded USB drive with Canon's logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Canon Canada's state-of-the-art HQ in Brampton includes a cafeteria, fitness centre, and walking trail. Instagram has 214K followers — very brand-conscious. Ideal for branded tech accessories and corporate apparel.",events:"Not found — check Canon Canada events page",altContact:"Website contact form: canon.ca/en/Contact-Support/General-Corporate",mockupNotes:"Tech-forward products: branded USB drives in Canon red, laptop sleeves with Canon logo, branded webcam covers, custom mouse pads. Use Canon's red and black brand colours.",emailSubject:"Local GTA promo company — branded gear for your Canon team 🎯",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a local branded products company based right here on Weston Road in North York, just a quick drive from your Brampton headquarters.\n\nI came across Canon Canada's impressive facility and wanted to reach out. With your team of 500+ employees and an incredibly strong brand presence (214K Instagram followers — wow!), I think there's a great opportunity to elevate your internal and external branding even further.\n\nAt Bulkamania, we specialize in custom branded apparel (polos, hoodies, jackets), tech accessories (USB drives, laptop sleeves, webcam covers), corporate gifts, and event merchandise. Everything is done locally with fast turnaround.\n\nI've put together a quick presentation showing your Canon logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to swing by your Brampton office with some samples. How does a quick 15-minute coffee chat sound?\n\nLooking forward to connecting!\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Canon Canada! 🔥 We mocked up your logo on some of our trending branded products — take a look, it looks amazing! We're a local promo company right here in North York. Would love to chat!",linkedinDM:"Hi there! We put together a quick mockup showing the Canon Canada logo on some of our trending branded products — looks incredible! We're a local GTA company on Weston Rd. Would love to connect and share some ideas! 🔥"},
+            {name:"Dynacare Inc.",address:"115 Midair Court, Brampton, ON L6T 5M3",distance:"17.2 km",employees:"3,000+",website:"https://www.dynacare.ca",instagram:"@dynacare",instagramUrl:"https://www.instagram.com/dynacare/",linkedin:"https://ca.linkedin.com/company/dynacare",contactName:"Ritika Gaur",contactTitle:"Marketing Manager",contactEmail:"Not found — use general: contactus@dynacare.ca",contactPhone:"(905) 790-3000",googleRating:"3.2",socialActivity:"Moderate",dealRating:"Hot",buyingSignals:"Expanding rapidly — opening new labs across Ontario in 2025-2026. Recently opened locations in multiple Ontario cities.",doorOpener:"Branded lab coat or branded hand sanitizer set with Dynacare logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"One of Canada's largest diagnostic lab companies, 3,000+ employees. Expanding with new lab openings across Ontario — great time for branded onboarding kits and lab merchandise.",events:"Participated in community health events; active in Roots Community Food Centre events",altContact:"Website: dynacare.ca/contact-us.aspx",mockupNotes:"Healthcare-themed: branded scrub tops, lab coats with embroidered Dynacare logo, branded hand sanitizers, custom ID badge holders, branded water bottles. Use Dynacare's blue/teal brand colours.",emailSubject:"Branded gear for Dynacare's growing team — local GTA supplier 🏥",emailBody:"Hi Ritika,\n\nI'm Paulo from Bulkamania Promotions — we're a branded products company based right here in North York on Weston Road, just a short drive from your Brampton headquarters.\n\nCongratulations on Dynacare's incredible expansion — I've seen the announcements about your new lab openings across Ontario, and that's exciting growth! With 3,000+ employees and new locations opening up, I imagine there's a growing need for branded onboarding kits, uniforms, and employee recognition items.\n\nAt Bulkamania, we specialize in custom branded apparel, corporate gifts, and promotional products. We can help with branded scrubs and lab coats, employee welcome kits, branded water bottles and tote bags for health events, and custom lanyards and ID badge holders.\n\nI've put together a quick presentation showing your Dynacare logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to drop by your Brampton office with some samples. When would work for a quick 15-minute chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Dynacare! 🔥 We mocked up your logo on a few of our trending products — check it out, looks great! We're a local promo company in North York. Would love to help with branded gear for your growing team!",linkedinDM:"Hi Ritika! We created a quick mockup with the Dynacare logo on some of our trending branded products — it looks fantastic! We're a local GTA company and would love to help with your expansion. Happy to share more! 🙌"},
+            {name:"Woodbine Entertainment Group",address:"555 Rexdale Blvd, Etobicoke, ON M9W 5L2",distance:"9.8 km",employees:"1,000+",website:"https://woodbine.com",instagram:"@woodbinetb",instagramUrl:"https://www.instagram.com/woodbinetb/",linkedin:"https://ca.linkedin.com/company/woodbine-entertainment-group",contactName:"Kelly Tyson",contactTitle:"Director, Marketing, Events and Experience",contactEmail:"Not found — use format: kelly.tyson@woodbine.com",contactPhone:"(416) 675-7223",googleRating:"4.2",socialActivity:"Active",dealRating:"Hot",buyingSignals:"Major entertainment venue with constant events, horse racing seasons, and large crowds. Events require merchandise and branded items year-round.",doorOpener:"Branded polo shirt or branded cap with Woodbine horse racing theme",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Operates Woodbine Racetrack and Woodbine Mohawk Park. 25K Instagram followers. Major Toronto entertainment destination with constant events and large visitor traffic. Big potential for event merchandise.",events:"Year-round horse racing events; Queen's Plate (Canada's most prestigious horse race); concerts and entertainment events at Woodbine",altContact:"Corporate: woodbine.com/corporate/contact/",mockupNotes:"Event & hospitality: branded polo shirts in Woodbine blue, custom baseball caps with horse racing logo, branded tote bags for event giveaways, VIP branded gift sets, branded umbrellas. Use Woodbine's blue and gold colours.",emailSubject:"Branded merch for Woodbine events — we're just down the road! 🏇",emailBody:"Hi Kelly,\n\nI'm Paulo from Bulkamania Promotions — we're just down the road from you on Weston Road in North York, less than 10 km from Woodbine Racetrack!\n\nWoodbine Entertainment is such an iconic Toronto destination, and with the racing season, concerts, and all the events you host, I'm sure there's always a need for high-quality branded merchandise — from staff uniforms to event giveaways and VIP gifts.\n\nAt Bulkamania, we specialize in custom branded apparel (polos, jackets, caps), event merchandise, corporate gifts, and promotional items. Being so close by means we can turn things around quickly and even drop off samples in person.\n\nI've put together a quick presentation showing the Woodbine logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to swing by with some samples. How does a quick coffee chat sound?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Woodbine! 🏇🔥 We mocked up your logo on some of our trending event merch — looks incredible! We're literally just down the road on Weston Rd. Would love to chat about branded gear for your events!",linkedinDM:"Hi Kelly! We put together a quick mockup with the Woodbine logo on some trending branded products — it looks amazing! We're just down the road in North York and would love to help with event merchandise. Let's connect! 🏇"},
+            {name:"Compass Group Canada",address:"1 Prologis Blvd, Suite 400, Mississauga, ON L5W 0G2",distance:"24.5 km",employees:"20,000+",website:"https://www.compass-canada.com",instagram:"@compassgroupcan",instagramUrl:"https://www.instagram.com/compassgroupcan/",linkedin:"https://ca.linkedin.com/company/compassgroupcanada",contactName:"Mary Hopkins",contactTitle:"Manager, Marketing",contactEmail:"mary.hopkins@compass-canada.com (estimated)",contactPhone:"(905) 795-5100",googleRating:"3.8",socialActivity:"Moderate",dealRating:"Hot",buyingSignals:"Canada's leading foodservice company with 20,000+ employees. Named Best Workplace in Ontario 2025. Huge potential for staff uniforms, branded kitchen items, and corporate merchandise.",doorOpener:"Branded chef's apron or branded insulated lunch tote with Compass logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Canada's largest foodservice and support services company. 20,000+ employees across the country — enormous volume potential for branded uniforms, kitchen gear, and corporate swag.",events:"Company-wide recognition events; culinary competitions; community partnerships",altContact:"Corporate: corporate.communications@compass-canada.com",mockupNotes:"Hospitality/food service: branded chef aprons, custom kitchen towels, branded insulated bags, polo shirts with Compass logo, branded water bottles for staff. Use Compass Group's navy blue and orange brand colours.",emailSubject:"20,000 employees — let's brand them up! Local GTA promo partner 🍽️",emailBody:"Hi Mary,\n\nI'm Paulo from Bulkamania Promotions — we're a GTA-based branded products company up in North York on Weston Road.\n\nCompass Group Canada is truly impressive — Canada's leading foodservice company with over 20,000 employees! I imagine the demand for branded uniforms, staff apparel, and corporate merchandise is constant. Congratulations on being named one of the Best Workplaces in Ontario!\n\nAt Bulkamania, we specialize in high-volume branded apparel (polos, chef coats, aprons, jackets), corporate gifts, and promotional items. We're local, which means fast turnaround and the ability to meet in person to discuss your needs.\n\nI've put together a quick presentation showing the Compass Group logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to come out to your Mississauga office with some samples. When would be a good time for a quick chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Compass Group! 🔥 We put your logo on a few of our best-selling branded products — check it out, looks great! We're a local promo company in North York. Would love to help outfit your 20K+ team! 💪",linkedinDM:"Hi Mary! We created a quick mockup with the Compass Group logo on some of our trending branded products — it looks fantastic! We're a local GTA company and would love to discuss branded gear for your incredible team. Let's connect! 🙌"},
+            {name:"Colliers Canada",address:"1140 Bay St, Suite 4000, Toronto, ON M5S 2B4",distance:"17.5 km",employees:"2,600+",website:"https://www.collierscanada.com",instagram:"@collierscanada",instagramUrl:"https://www.instagram.com/collierscanada/",linkedin:"https://ca.linkedin.com/company/colliers-canada",contactName:"Not found — request Marketing Dept.",contactTitle:"Marketing Manager / Brand",contactEmail:"Not found — use format: firstname.lastname@colliers.com",contactPhone:"(416) 777-2200",googleRating:"4.0",socialActivity:"Active",dealRating:"Warm",buyingSignals:"Global HQ in Toronto. 11K Instagram followers. Major commercial real estate firm — client gifts and corporate branding important in their industry.",doorOpener:"Branded premium notebook and pen set with Colliers logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Global commercial real estate services firm, HQ'd in Toronto. 18,000+ employees worldwide, 2,600+ in Canada. 11K Instagram followers. Ideal for premium corporate gifts and professional branded items.",events:"Commercial real estate conferences; networking events; client appreciation events",altContact:"Office directory: collierscanada.com/en-ca/office-locations",mockupNotes:"Corporate/professional: branded premium notebooks, pen sets, leather portfolios, branded umbrella, custom laptop bags, branded tie clips. Use Colliers' blue and white brand colours.",emailSubject:"Elevate your Colliers brand — premium promotional products 🏢",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a local North York-based branded products company, right here in the GTA.\n\nColliers is a powerhouse in commercial real estate, and with your global headquarters right here in Toronto, I think there's a great opportunity to enhance your corporate gifting and branded merchandise program.\n\nWe specialize in premium branded items that match the caliber of a global firm like Colliers — think custom leather portfolios, branded Moleskine notebooks, premium pen sets, branded laptop bags, and corporate gift boxes for client appreciation.\n\nI've put together a quick presentation showing the Colliers logo on some of our trending products — take a look and let me know what you think!\n\nWould you be open to a quick coffee meeting? I'd love to learn more about your branding needs.\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Colliers Canada! 🏢🔥 We mocked up your logo on some premium branded products — looks sleek! We're a local GTA promo company. Would love to chat about corporate gifts and branded merch!",linkedinDM:"Hi! We put together a quick mockup with the Colliers logo on some of our premium branded products — it looks sharp! We're a local GTA company specializing in corporate merchandise. Would love to connect! 🙌"},
+            {name:"GSK Canada (GlaxoSmithKline)",address:"100 Milverton Dr, Suite 800, Mississauga, ON L5R 4H1",distance:"28.0 km",employees:"1,700+",website:"https://ca.gsk.com",instagram:"@gsk",instagramUrl:"https://www.instagram.com/gsk/",linkedin:"https://ca.linkedin.com/company/gsk",contactName:"Not found — request Marketing/Procurement",contactTitle:"Marketing Manager / Procurement",contactEmail:"Not found — use format: firstname.x.lastname@gsk.com",contactPhone:"(905) 819-3000",googleRating:"3.6",socialActivity:"Active",dealRating:"Hot",buyingSignals:"Named Greater Toronto's Top Employer 2025. 1,700+ employees in Canada. Recently increased vacation allowances — employee wellness focus suggests branded wellness items would be well received.",doorOpener:"Branded wellness kit — hand sanitizer, branded water bottle, and stress ball with GSK logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Major pharmaceutical company, 1,700+ employees in Canada. Named GTA Top Employer 2025. 110K Instagram followers globally. Strong employer brand — ideal for branded employee wellness kits and onboarding materials.",events:"Health awareness campaigns; employee wellness events; industry conferences",altContact:"General inquiries: ca-enquiries@gsk.com",mockupNotes:"Pharma/wellness: branded wellness kits, custom water bottles, branded tote bags for health campaigns, lab coat embroidery, branded stress balls. Use GSK's orange and grey brand colours.",emailSubject:"Branded wellness gear for your GSK team — local GTA supplier 💊",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a GTA-based branded products company up in North York.\n\nCongratulations to GSK Canada on being named one of Greater Toronto's Top Employers for 2025! With 1,700+ employees across Canada and a strong focus on employee wellness, I think there's a fantastic opportunity to enhance your branded merchandise program.\n\nAt Bulkamania, we specialize in branded wellness kits (hand sanitizer sets, water bottles, stress relievers), custom apparel (polos, jackets, scrubs), corporate gifts, and event merchandise. We're local and can meet in person to discuss your specific needs.\n\nI've put together a quick presentation showing the GSK logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to come out to your Mississauga office with some samples. When would work for a quick chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey GSK Canada! 🔥 We mocked up your logo on some trending branded wellness products — looks amazing! We're a local promo company in the GTA. Would love to chat about kitting out your team! 💪",linkedinDM:"Hi! Congrats to GSK on the Top Employer award! We put together a quick mockup with the GSK logo on some branded wellness products — looks incredible! We're local in the GTA and would love to connect. 🙌"},
+            {name:"Coca-Cola Canada Bottling",address:"3665 Westcreek Blvd, Brampton, ON L6T 5T1",distance:"22.0 km",employees:"1,300+",website:"https://cokecanada.com",instagram:"@cocacola_ca",instagramUrl:"https://www.instagram.com/cocacola_ca/",linkedin:"https://ca.linkedin.com/company/coca-cola-canada",contactName:"Not found — request Marketing Dept.",contactTitle:"Marketing / Brand Manager",contactEmail:"Not found — check cokecanada.com contact",contactPhone:"(905) 451-7000",googleRating:"3.9",socialActivity:"Active",dealRating:"Hot",buyingSignals:"$141 million investment in new Brampton manufacturing can line — massive expansion! Growing workforce. Recently celebrated 15 years in Brampton.",doorOpener:"Branded insulated tumbler or branded cooler bag with Coca-Cola Canada logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"Likely has existing promo suppliers but new investment creates new needs",comments:"Brampton facility is Coca-Cola's largest Canadian plant at 630,000 sq ft. 1,300+ employees. $141M investment in 2025-2026 — major growth. 70K Instagram followers. Huge brand presence.",events:"Community events in Brampton; recently welcomed by City of Brampton for $141M investment",altContact:"cokecanada.com contact form",mockupNotes:"Beverage-themed: branded insulated tumblers in Coke red, branded cooler bags, custom aprons for production staff, branded snapback caps, custom t-shirts for events. Use iconic Coca-Cola red and white.",emailSubject:"Congrats on the $141M investment! Let's gear up your growing team 🥤",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a GTA-based branded products company on Weston Road in North York.\n\nHuge congratulations on Coca-Cola Canada Bottling's $141 million investment in the Brampton facility — that's the biggest single investment you've made in your facilities! With the new manufacturing can line and a growing team of 1,300+ employees, I imagine there's a need for branded apparel, onboarding kits, and celebration merchandise.\n\nAt Bulkamania, we specialize in custom branded apparel (t-shirts, hoodies, caps, work jackets), promotional items (tumblers, cooler bags, lanyards), and corporate gifts. Being local in the GTA means fast turnaround and personal service.\n\nI've put together a quick presentation showing your logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to come by your Brampton facility with some samples. When would work for a quick chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Coca-Cola Canada! 🥤🔥 Congrats on the $141M Brampton expansion! We mocked up your logo on some trending branded products — looks amazing! We're a local promo company in North York. Would love to chat!",linkedinDM:"Hi! Congrats on the massive $141M investment in Brampton! We put together a quick mockup with the Coke Canada logo on some trending branded products — looks incredible! We're local in North York. Let's connect! 🔥"},
+            {name:"Great Gulf Group",address:"351 King St E, 13th Floor, Toronto, ON M5A 0L6",distance:"21.5 km",employees:"200+",website:"https://www.greatgulf.com",instagram:"@greatgulf",instagramUrl:"https://www.instagram.com/greatgulf/",linkedin:"https://ca.linkedin.com/company/great-gulf-homes",contactName:"Not found — request Marketing Dept.",contactTitle:"Marketing Manager",contactEmail:"info@greatgulf.com",contactPhone:"(416) 491-1155",googleRating:"3.8",socialActivity:"Active",dealRating:"Warm",buyingSignals:"Award-winning builder active across GTA. 34K Instagram followers. Multiple active developments — each new community launch is a branding opportunity.",doorOpener:"Branded hard hat or branded measuring tape with Great Gulf logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Award-winning home builder and developer since 1975. Active projects in Toronto, Milton, Bradford, Oakville, Whitby, and Brampton. 34K Instagram followers — strong brand presence. Every new community launch needs branded merch.",events:"New community launches; open houses; industry awards ceremonies",altContact:"customercare.lowrise@greatgulf.com, hirisecustomercare@greatgulf.com",mockupNotes:"Construction/real estate: branded hard hats, measuring tapes, high-vis vests, branded tote bags for open houses, branded polo shirts for sales team, model home branded items. Use Great Gulf's dark navy and gold brand colours.",emailSubject:"Branded merch for Great Gulf's community launches — local GTA partner 🏗️",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a local North York-based branded products company, right here in the GTA.\n\nGreat Gulf's reputation as an award-winning builder is incredible — since 1975, you've been shaping communities across the GTA. With active projects in Toronto, Milton, Bradford, and more, I think there's a great opportunity for branded merchandise for your sales teams, community launches, and client gifts.\n\nAt Bulkamania, we specialize in custom branded apparel (polos, jackets, hats), construction-themed promotional items (branded hard hats, measuring tapes, tool kits), and premium client gifts for homebuyers.\n\nI've put together a quick presentation showing the Great Gulf logo on some of our trending products — take a look and let me know what you think!\n\nWould you be open to a quick coffee meeting? I'd love to discuss how we can support your branding across all your active communities.\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Great Gulf! 🏗️🔥 We mocked up your logo on some trending branded products — looks sharp! We're a local promo company in North York. Would love to chat about branded merch for your community launches!",linkedinDM:"Hi! We put together a quick mockup with the Great Gulf logo on some of our trending branded products — it looks amazing! We're a local GTA company. Would love to discuss branded gear for your sales teams and launches! 🙌"},
+            {name:"Metro Supply Chain",address:"1401 Creditstone Rd, Concord, ON L4K 4N7",distance:"7.5 km",employees:"6,000+",website:"https://www.metroscg.com",instagram:"@metrosupplychain",instagramUrl:"https://www.instagram.com/metrosupplychain/",linkedin:"https://ca.linkedin.com/company/metro-supply-chain-group",contactName:"Not found — request Marketing/HR",contactTitle:"Marketing Manager / HR",contactEmail:"Not found — use format: firstinitiallast@metroscg.com",contactPhone:"(905) 738-5577",googleRating:"3.5",socialActivity:"Moderate",dealRating:"Hot",buyingSignals:"6,000+ employees, 180+ sites across Canada, US, and UK. Headquartered in Concord — very close to 4141 Weston Rd. Massive staff count means huge volume potential.",doorOpener:"Branded safety vest or branded insulated lunch bag with Metro Supply Chain logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"One of Canada's largest privately-owned 3PL companies. 6,000+ employees across 180+ sites. HQ in Concord, just 7.5 km from Bulkamania — the closest prospect on the list! Huge volume potential for warehouse staff apparel and safety gear.",events:"Industry logistics trade shows; company recognition events",altContact:"Contact form: metroscg.com/contact-us/",mockupNotes:"Logistics/warehouse: branded safety vests, custom work shirts, branded hard hats, insulated lunch bags, branded water bottles for warehouse staff, custom jackets. Use Metro's blue brand colours.",emailSubject:"We're practically neighbours! Branded gear for 6,000+ employees 📦",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're literally just down the road from you! Our office is on Weston Road in North York, less than 8 km from your Concord headquarters. We're basically neighbours!\n\nMetro Supply Chain is seriously impressive — 6,000+ employees across 180+ sites, and one of Canada's largest privately-owned logistics companies. With that many team members, I imagine the demand for branded workwear, safety gear, and staff apparel is constant.\n\nAt Bulkamania, we specialize in high-volume branded apparel (work shirts, jackets, safety vests), warehouse-ready promotional items (insulated lunch bags, water bottles, hard hats), and employee recognition gifts.\n\nI've put together a quick presentation showing the Metro Supply Chain logo on some of our trending products — take a look and let me know what you think!\n\nSince we're so close, I'd love to literally walk over with some samples. How does a quick chat sound?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Metro Supply Chain! 🔥 We're literally just down the road in North York! We mocked up your logo on some branded work gear — looks awesome! Would love to drop off some samples. Let's chat! 📦",linkedinDM:"Hi! We're practically neighbours — just down the road on Weston Rd! We put together a mockup with the Metro Supply Chain logo on some branded work gear — looks great! Would love to connect and share ideas. 🙌"},
+            {name:"Baycrest Health Sciences",address:"3560 Bathurst St, Toronto, ON M6A 2E1",distance:"5.8 km",employees:"800+",website:"https://www.baycrest.org",instagram:"@baycrest",instagramUrl:"https://www.instagram.com/baycrest/",linkedin:"https://ca.linkedin.com/company/baycrest",contactName:"Not found — request Communications/Marketing",contactTitle:"Communications / Marketing Manager",contactEmail:"foundation@baycrest.org",contactPhone:"(416) 785-2500",googleRating:"3.7",socialActivity:"Moderate",dealRating:"Warm",buyingSignals:"Leading research and teaching hospital. Very close to Bulkamania — just 5.8 km. Foundation fundraising events would benefit from branded merchandise.",doorOpener:"Branded notebook and pen set or branded tote bag with Baycrest logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Research and teaching hospital in North York, focused on elderly care. 800+ employees, 4,741 Instagram followers. Very close to Bulkamania — fellow neighbourhood business! Foundation runs regular fundraising events.",events:"Foundation fundraising galas; research conferences; community health events",altContact:"Website: baycrest.org/contact-us/",mockupNotes:"Healthcare/hospital: branded scrub tops, custom tote bags for events, branded water bottles, branded pens for staff, custom lanyards. Use Baycrest's purple and white brand colours.",emailSubject:"Fellow neighbourhood business — branded gear for Baycrest's team 💜",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're just down the road from you on Weston Road in North York! Baycrest is less than 6 km from our office, so we're true neighbours.\n\nBaycrest's work in elderly care and brain health research is truly inspiring, and with 800+ dedicated employees, I think there's a great opportunity for branded apparel and promotional items — whether for staff recognition, foundation fundraising events, or research conferences.\n\nAt Bulkamania, we specialize in custom branded apparel (scrub tops, polos, jackets), event merchandise (tote bags, water bottles, lanyards), and fundraising giveaways. Being so close means we can turn things around quickly and drop off samples anytime.\n\nI've put together a quick presentation showing the Baycrest logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to swing by with some samples. How does a quick 15-minute chat sound?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Baycrest! 💜 We're just down the road on Weston Rd — fellow North York locals! We mocked up your logo on some trending branded products — looks great! Would love to drop off some samples!",linkedinDM:"Hi! We're fellow North York neighbours — just down the road on Weston Rd! We put together a mockup with the Baycrest logo on some branded products — it looks wonderful! Would love to connect. 💜"},
+            {name:"Sunnybrook Health Sciences Centre",address:"2075 Bayview Ave, Toronto, ON M4N 3M5",distance:"14.0 km",employees:"5,800+",website:"https://sunnybrook.ca",instagram:"@sunnybrook",instagramUrl:"https://www.instagram.com/sunnybrook/",linkedin:"https://ca.linkedin.com/company/sunnybrook-health-sciences-centre",contactName:"Not found — use Communications",contactTitle:"Communications & Marketing",contactEmail:"publicaffairs@sunnybrook.ca",contactPhone:"(416) 480-6100",googleRating:"3.8",socialActivity:"Active",dealRating:"Hot",buyingSignals:"5,800+ employees. Major research hospital with constant fundraising events. 21K Instagram followers. Strong community presence.",doorOpener:"Branded premium water bottle or branded tote bag with Sunnybrook logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"One of Canada's largest hospitals and research centres. 5,800+ employees, 21K Instagram followers. Regular fundraising events through Sunnybrook Foundation. Huge potential for staff apparel and event merchandise.",events:"Sunnybrook Foundation galas; Run for Sunnybrook; community health events; research symposiums",altContact:"Website: sunnybrook.ca/content/?page=occ-important-phone-numbers",mockupNotes:"Healthcare: branded scrubs, custom lab coats, branded tote bags for foundation events, branded water bottles, custom lanyards with card holders. Use Sunnybrook's green and white brand colours.",emailSubject:"Branded merchandise for 5,800+ Sunnybrook heroes — local GTA partner 🏥",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a local North York-based branded products company on Weston Road.\n\nSunnybrook Health Sciences Centre is one of Canada's most iconic hospitals, and with 5,800+ dedicated employees and a vibrant foundation events calendar, I think there's a great opportunity for branded merchandise — from staff recognition items to fundraising event giveaways.\n\nAt Bulkamania, we specialize in custom branded apparel (scrubs, lab coats, polos), event merchandise (tote bags, water bottles for runs and galas), and employee recognition gifts. We're local in North York, so turnaround is fast and we can meet in person.\n\nI've put together a quick presentation showing the Sunnybrook logo on some of our trending products — take a look and let me know what you think!\n\nWould you be open to a quick meeting to discuss how we can support your team and events?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Sunnybrook! 💚 We mocked up your logo on some trending branded products — looks amazing! We're a local North York promo company. Would love to help with branded gear for your incredible team and events! 🙌",linkedinDM:"Hi! We put together a quick mockup with the Sunnybrook logo on some trending branded products — it looks fantastic! We're a local North York company and would love to help with branded merchandise for your team. Let's connect! 💚"},
+            {name:"Greater Toronto Airports Authority (GTAA)",address:"Toronto Pearson International Airport, Mississauga, ON L5P 1B2",distance:"14.5 km",employees:"1,400+",website:"https://www.torontopearson.com",instagram:"@torontopearson",instagramUrl:"https://www.instagram.com/torontopearson/",linkedin:"https://ca.linkedin.com/company/greater-toronto-airports-authority",contactName:"Not found — request Marketing/Procurement",contactTitle:"Marketing / Procurement Manager",contactEmail:"Not found — use format: firstname.lastname@gtaa.com",contactPhone:"(416) 776-3000",googleRating:"3.5",socialActivity:"Active",dealRating:"Hot",buyingSignals:"Canada's busiest airport. 1,400+ direct employees plus thousands in airport community. 89K Instagram followers. Named GTA Top Employer. Constant need for branded merchandise.",doorOpener:"Branded luggage tag or branded travel mug with GTAA/Pearson logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"Likely has existing suppliers but volume is huge",comments:"Canada's busiest airport, 89K Instagram followers. 1,400+ direct employees. Named GTA Top Employer 2026. Every airport employee needs branded uniforms and accessories. Aviation-themed merchandise has broad appeal.",events:"Employee appreciation events; aviation industry conferences; community engagement programs",altContact:"General: torontopearson.com contact page",mockupNotes:"Aviation-themed: branded luggage tags, travel mugs, branded polo shirts, custom lanyards, branded windbreakers, travel accessory kits. Use Pearson's blue and white brand colours.",emailSubject:"Branded gear for Canada's busiest airport team — local GTA partner ✈️",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a local North York-based branded products company on Weston Road, just a short drive from Toronto Pearson.\n\nCongratulations on being named one of Greater Toronto's Top Employers! With 1,400+ GTAA employees and thousands more in the airport community, I think there's an incredible opportunity for branded merchandise — from staff uniforms and recognition items to aviation-themed corporate gifts.\n\nAt Bulkamania, we specialize in custom branded apparel (polos, windbreakers, jackets), promotional items (luggage tags, travel mugs, lanyards), and corporate gifts. We're local, which means fast turnaround and the ability to meet in person.\n\nI've put together a quick presentation showing the Toronto Pearson logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to come out to Pearson with some samples. When would work for a quick chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Toronto Pearson! ✈️🔥 We mocked up your logo on some trending branded products — looks incredible! We're a local promo company in North York. Would love to chat about branded merch for your amazing team!",linkedinDM:"Hi! Congrats on the Top Employer award! We put together a mockup with the Toronto Pearson logo on some trending branded products — it looks great! We're local in North York. Would love to connect! ✈️"},
+            {name:"Haleon Canada",address:"55 Standish Ct, Suite 450, Mississauga, ON L5R 4B2",distance:"29.0 km",employees:"1,000+",website:"https://www.haleon.com",instagram:"@haleon",instagramUrl:"https://www.instagram.com/haleon/",linkedin:"https://ca.linkedin.com/company/haleon",contactName:"Not found — request Marketing/Procurement",contactTitle:"Marketing Manager",contactEmail:"Not found — use format: first.last@haleon.com",contactPhone:"Not found",googleRating:"N/A",socialActivity:"Active",dealRating:"Warm",buyingSignals:"Newly independent from GSK (2022). Building own brand identity — needs branded merchandise to establish separate Haleon culture. Named GTA Top Employer.",doorOpener:"Branded wellness kit with hand cream, lip balm, and branded tote",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Consumer health company (Sensodyne, Centrum, Voltaren). Spun off from GSK in 2022 — still building its independent brand identity. 1,000+ Canadian employees from 37 countries. Named GTA Top Employer. 21K Instagram followers.",events:"Employee wellness events; product launch campaigns; healthcare professional education events",altContact:"haleon.com/contact",mockupNotes:"Wellness/consumer health: branded wellness kits, custom tote bags with Haleon green, branded water bottles, branded notebook sets, custom polo shirts. Use Haleon's bright green brand colour.",emailSubject:"Building the Haleon brand — let us help with branded gear! 💚",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a GTA-based branded products company in North York.\n\nCongratulations on Haleon's independence and on being named a GTA Top Employer! As a newly independent company building its own brand identity separate from GSK, I imagine there's a strong need for branded merchandise that reinforces the Haleon brand — for your team of 1,000+ employees across Canada.\n\nAt Bulkamania, we specialize in branded wellness kits (perfect for a consumer health company!), custom apparel, corporate gifts, and event merchandise. We can help bring the Haleon green to life across everything from polo shirts to wellness giveaways.\n\nI've put together a quick presentation showing the Haleon logo on some of our trending products — take a look and let me know what you think!\n\nWould you be open to a meeting to discuss how we can support your brand-building efforts?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Haleon! 💚🔥 We mocked up your logo on some trending branded products — looks so clean! We're a local GTA promo company. Would love to help build the Haleon brand through branded merch!",linkedinDM:"Hi! Congrats on the Top Employer recognition! We put together a mockup with the Haleon logo on some branded products — it looks fantastic in that signature green! We're local in the GTA. Let's connect! 💚"},
+            {name:"Aecon Group Inc.",address:"20 Carlson Court, Suite 105, Toronto, ON M9W 7K6",distance:"8.0 km",employees:"5,000-10,000",website:"https://www.aecon.com",instagram:"@aecongroupinc",instagramUrl:"https://www.instagram.com/aecongroupinc/",linkedin:"https://ca.linkedin.com/company/aecon",contactName:"Not found — request Marketing/Procurement",contactTitle:"Procurement / Marketing",contactEmail:"Not found — use format: firstname.lastname@aecon.com",contactPhone:"(416) 297-2600",googleRating:"3.5",socialActivity:"Active",dealRating:"Hot",buyingSignals:"One of Canada's largest construction companies. Massive workforce of 5,000-10,000. Very close to Bulkamania at just 8 km. Construction crews need branded safety gear and workwear constantly.",doorOpener:"Branded safety hard hat or branded high-vis vest with Aecon logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"Likely has existing workwear suppliers but always room for promotional items",comments:"One of Canada's largest construction and infrastructure companies. HQ in Etobicoke, very close to Bulkamania. 9,524 Instagram followers. Constant need for safety-branded workwear across projects.",events:"Industry conferences; infrastructure project milestones; safety awareness events",altContact:"Website: aecon.com/contact-us",mockupNotes:"Construction/infrastructure: branded hard hats, high-vis safety vests, branded work jackets, custom tool belts, branded insulated tumblers, safety posters. Use Aecon's blue, yellow, and black brand colours.",emailSubject:"We're neighbours! Branded safety gear for 5,000+ Aecon workers 🏗️",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're just down the road from your Etobicoke headquarters on Weston Road in North York, about 8 km away. We're practically neighbours!\n\nAecon is one of Canada's most impressive construction companies, and with 5,000-10,000 employees working on major infrastructure projects across the country, the demand for branded safety gear, workwear, and corporate merchandise must be substantial.\n\nAt Bulkamania, we specialize in branded safety gear (hard hats, high-vis vests, safety-compliant jackets), custom workwear (shirts, hoodies, caps), and corporate promotional items. Being right nearby means we can deliver fast and meet in person.\n\nI've put together a quick presentation showing the Aecon logo on some of our trending products — take a look and let me know what you think!\n\nSince we're so close, I'd love to drop by with some samples. When would work for a quick chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Aecon! 🏗️🔥 We're just down the road in North York! We mocked up your logo on some branded safety gear and workwear — looks great! Would love to drop off some samples. Let's connect!",linkedinDM:"Hi! We're practically neighbours — just down the road on Weston Rd! We put together a mockup with the Aecon logo on branded work gear and safety items — looks awesome! Would love to connect. 🏗️"},
+            {name:"Stantec",address:"25 York St, Suite 1800, Toronto, ON M5J 2V5",distance:"20.0 km",employees:"2,000+ (Canada: Toronto)",website:"https://www.stantec.com",instagram:"@stantec",instagramUrl:"https://www.instagram.com/stantec/",linkedin:"https://ca.linkedin.com/company/stantec",contactName:"Not found — request Marketing/Brand",contactTitle:"Marketing / Brand Manager",contactEmail:"Not found — use format: firstname.lastname@stantec.com",contactPhone:"(416) 596-6666",googleRating:"3.8",socialActivity:"Active",dealRating:"Warm",buyingSignals:"Major global engineering firm with significant Toronto presence. 39K Instagram followers. Community-focused brand — redefining what's possible. Professional corporate gifting aligns well.",doorOpener:"Branded premium pen and notebook set with Stantec logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Global engineering and consulting firm. 28,000+ employees globally, significant Toronto office. 39K Instagram followers. Professional brand that values quality — ideal for premium corporate merchandise.",events:"Engineering conferences; community design workshops; employee recognition events",altContact:"Offices: stantec.com/en/offices",mockupNotes:"Professional/engineering: branded premium notebooks, pen sets, laptop bags, branded hard hats (for site visits), custom polo shirts, branded umbrella. Use Stantec's orange and grey brand colours.",emailSubject:"Premium branded products for Stantec's team — local GTA company 🏢",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a local North York-based branded products company, right here in the GTA.\n\nStantec's mission to redefine what's possible is inspiring, and with your significant Toronto presence and a global team of 28,000+, I think there's a great opportunity for premium branded merchandise — whether for corporate gifts, client presentations, or team recognition.\n\nAt Bulkamania, we specialize in high-quality branded items (premium notebooks, laptop bags, pen sets), custom apparel (polos, jackets, hard hats for site visits), and corporate gift boxes. We focus on quality that matches the caliber of firms like Stantec.\n\nI've put together a quick presentation showing the Stantec logo on some of our trending products — take a look and let me know what you think!\n\nWould you be open to a quick coffee meeting to discuss your branded merchandise needs?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Stantec! 🔥 We mocked up your logo on some premium branded products — looks so clean! We're a local GTA promo company. Would love to chat about branded gear for your team! 🧡",linkedinDM:"Hi! We put together a mockup with the Stantec logo on some premium branded products — it looks excellent! We're a local GTA company. Would love to discuss corporate merchandise options. Let's connect! 🧡"},
+            {name:"Deloitte Canada",address:"8 Adelaide St W, Suite 200, Toronto, ON M5H 0A9",distance:"20.5 km",employees:"15,000+ (Canada)",website:"https://www.deloitte.com/ca",instagram:"@deloittecanada",instagramUrl:"https://www.instagram.com/deloittecanada/",linkedin:"https://ca.linkedin.com/company/deloitte",contactName:"Not found — request Procurement/Marketing",contactTitle:"Procurement / Brand Marketing",contactEmail:"Not found — use format: firstname.lastname@deloitte.ca",contactPhone:"(416) 601-6150",googleRating:"4.0",socialActivity:"Active",dealRating:"Hot",buyingSignals:"One of the Big Four. 15,000+ Canadian employees. 27K Instagram followers. Constant need for branded merchandise for onboarding, events, and client gifts.",doorOpener:"Branded premium pen in Deloitte green or branded travel mug",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"Likely has existing branded merchandise program but always opportunity for supplementary items",comments:"One of the Big Four professional services firms. 15,000+ employees in Canada. 27K Instagram followers. Regular onboarding cohorts, campus recruiting events, and client appreciation — all require branded merchandise.",events:"Campus recruiting events; Deloitte Summit; client appreciation events; community volunteering events",altContact:"Press contacts: deloitte.com/ca/en/who-we-are/people/profiles/press-office-contacts.html",mockupNotes:"Professional services: branded premium pens, custom laptop sleeves, branded tote bags for campus events, branded water bottles, custom polo shirts in Deloitte green. Use Deloitte's green and black brand colours.",emailSubject:"Branded gear for 15,000+ Deloitte professionals — local GTA partner 💚",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a local GTA-based branded products company in North York.\n\nDeloitte Canada is one of the most recognized professional services brands in the country, and with 15,000+ employees across Canada, I know there's always a need for high-quality branded merchandise — from onboarding welcome kits and campus recruiting giveaways to client appreciation gifts.\n\nAt Bulkamania, we specialize in premium branded items that match the quality expected from a Big Four firm — custom laptop sleeves, branded Moleskine notebooks, premium pen sets, branded apparel, and corporate gift boxes.\n\nI've put together a quick presentation showing the Deloitte logo on some of our trending products — take a look and let me know what you think!\n\nWould you be open to a meeting to explore how we could support your branded merchandise needs?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Deloitte Canada! 💚🔥 We mocked up your logo on some premium branded products — looks so sharp! We're a local GTA promo company. Would love to chat about branded merch for your incredible team!",linkedinDM:"Hi! We put together a mockup with the Deloitte logo on some premium branded products — it looks outstanding! We're a local GTA company specializing in corporate merchandise. Would love to connect! 💚"},
+            {name:"Spin Master Ltd.",address:"225 King St W, Toronto, ON M5V 3M2",distance:"21.0 km",employees:"2,000+",website:"https://www.spinmaster.com",instagram:"@spinmaster",instagramUrl:"https://www.instagram.com/spinmaster/",linkedin:"https://ca.linkedin.com/company/spin-master-ltd-",contactName:"Kim Phillips",contactTitle:"Sales & Marketing Specialist",contactEmail:"customercare@spinmaster.com",contactPhone:"1-800-622-8339",googleRating:"3.8",socialActivity:"Active",dealRating:"Warm",buyingSignals:"Global toy company HQ'd in Toronto. 2,000+ employees worldwide. Award-winning brands (PAW Patrol, Bakugan). Creative culture that would appreciate fun branded merchandise.",doorOpener:"Branded fun t-shirt or branded desk toy with Spin Master logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Canadian success story — toy company behind PAW Patrol, Rubik's Cube, and more. 2,000+ employees in 30+ offices globally. Fun, creative company culture — branded merchandise should match their playful brand identity.",events:"Toy Fair events; product launches; campus recruiting; company celebrations",altContact:"General: spinmaster.com/contact-us",mockupNotes:"Creative/playful: branded fun t-shirts with bold designs, custom hoodies, branded stress toys, custom tote bags in bright colours, branded mugs with playful designs. Use Spin Master's vibrant brand colours (red, blue, yellow).",emailSubject:"Fun branded merch for the Spin Master team — local Toronto partner 🎮",emailBody:"Hi Kim,\n\nI'm Paulo from Bulkamania Promotions — we're a local Toronto-based branded products company on Weston Road in North York.\n\nSpin Master is a true Canadian success story — from PAW Patrol to Rubik's Cube, you've built some of the most beloved brands in the world! With 2,000+ employees and that incredible creative culture, I think there's a fun opportunity for branded merchandise that matches your playful brand identity.\n\nAt Bulkamania, we specialize in custom branded apparel (fun t-shirts, hoodies, caps), creative promotional items (branded toys, stress relievers, custom mugs), and event merchandise for product launches and trade shows.\n\nI've put together a quick presentation showing the Spin Master logo on some of our trending products — take a look and let me know what you think!\n\nWould you be open to a quick coffee meeting? I'd love to brainstorm some fun branded merch ideas!\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Spin Master! 🎮🔥 We mocked up your logo on some fun branded products — looks awesome! We're a local Toronto promo company. Would love to create some playful branded merch for your team!",linkedinDM:"Hi Kim! We put together a fun mockup with the Spin Master logo on some of our trending branded products — it looks great! We're a local Toronto company. Would love to brainstorm some creative merch ideas! 🎮"},
+            {name:"North York General Hospital",address:"4001 Leslie St, Toronto, ON M2K 1E1",distance:"9.5 km",employees:"5,000+",website:"https://www.nygh.on.ca",instagram:"@northyorkgeneral",instagramUrl:"https://www.instagram.com/northyorkgeneral/",linkedin:"https://ca.linkedin.com/company/north-york-general-hospital",contactName:"Not found — use Corporate Communications",contactTitle:"Corporate Communications",contactEmail:"corporate.communications@nygh.on.ca",contactPhone:"(416) 756-6000",googleRating:"3.4",socialActivity:"Active",dealRating:"Hot",buyingSignals:"5,000+ employees right in North York. 7,562 Instagram followers. Major community hospital with constant events and staff needs.",doorOpener:"Branded insulated tumbler or branded tote bag with NYGH logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Major community hospital right in North York — very close to Bulkamania. 5,000+ employees. 7,562 Instagram followers. Regular community events, fundraising galas, and staff appreciation. HR contact: hr@nygh.on.ca",events:"Foundation fundraising events; community health fairs; staff appreciation weeks; holiday events",altContact:"HR: hr@nygh.on.ca | Phone: 416-756-6008",mockupNotes:"Healthcare: branded scrub tops, custom tote bags, branded water bottles, custom lanyards with badge holders, branded hand sanitizer sets. Use NYGH's blue and white brand colours.",emailSubject:"Fellow North York neighbours — branded gear for 5,000+ NYGH heroes 💙",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a fellow North York business on Weston Road, just about 10 km from your Leslie Street location. We're true neighbours!\n\nNorth York General Hospital is a pillar of our community, and with 5,000+ dedicated employees, I think there's a great opportunity for branded merchandise — from staff appreciation items and onboarding kits to fundraising event giveaways and holiday gifts.\n\nAt Bulkamania, we specialize in custom branded apparel (scrubs, polos, jackets), promotional items (water bottles, tote bags, lanyards), and event merchandise. Being right here in North York means we can deliver quickly and drop off samples anytime.\n\nI've put together a quick presentation showing the NYGH logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to swing by with some samples. When would work for a quick chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey North York General! 💙 We're fellow North York locals on Weston Rd! We mocked up your logo on some trending branded products — looks great! Would love to drop off samples for your amazing team!",linkedinDM:"Hi! We're fellow North York neighbours on Weston Rd! We put together a mockup with the NYGH logo on some branded products — it looks excellent! Would love to help with staff merch and event items. Let's connect! 💙"},
+            {name:"Bayer Inc. (Canada)",address:"2920 Matheson Blvd E, Mississauga, ON L4W 5R6",distance:"27.5 km",employees:"1,300+",website:"https://www.bayer.com/en/ca",instagram:"@bayer4cropsca",instagramUrl:"https://www.instagram.com/bayer4cropsca/",linkedin:"https://ca.linkedin.com/company/bayer",contactName:"Not found — request Marketing/Procurement",contactTitle:"Marketing Manager",contactEmail:"Not found — use format: firstname.lastname@bayer.com",contactPhone:"(905) 282-7600",googleRating:"3.6",socialActivity:"Active",dealRating:"Warm",buyingSignals:"1,300+ employees across Canada. Three major divisions (Pharmaceuticals, Consumer Health, Crop Science). 12K Instagram followers on Crop Science account. Multiple brand teams that each need branded items.",doorOpener:"Branded premium pen set or branded tote bag with Bayer logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"No specific promo supplier identified",comments:"Global pharma and agriculture giant. 1,300+ employees in Canada across three divisions. Named GTA Top Employer. Multiple brand teams across Pharmaceuticals, Consumer Health, and Crop Science — each a potential customer.",events:"Agricultural trade shows; healthcare conferences; employee wellness events",altContact:"General: bayer.com/en/ca/canada-contact-us",mockupNotes:"Pharma/agriculture: branded lab coats, custom polo shirts, branded tote bags for trade shows, branded water bottles, premium corporate gift sets. Use Bayer's blue cross logo with blue and green brand colours.",emailSubject:"Branded products for Bayer's three divisions — local GTA partner 💙",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a GTA-based branded products company in North York.\n\nBayer is a global powerhouse, and with 1,300+ employees in Canada across Pharmaceuticals, Consumer Health, and Crop Science, I imagine each division has its own branding needs — from trade show merchandise and employee onboarding kits to corporate client gifts.\n\nAt Bulkamania, we specialize in custom branded apparel, trade show merchandise, corporate gifts, and employee recognition items. We're local in the GTA, which means we can meet in person and turn things around quickly.\n\nI've put together a quick presentation showing the Bayer logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to come out to your Mississauga office with some samples. When would work for a quick chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey Bayer Canada! 💙 We mocked up your logo on some trending branded products — looks fantastic! We're a local GTA promo company. Would love to chat about branded merch for your team!",linkedinDM:"Hi! We put together a quick mockup with the Bayer logo on some trending branded products — it looks great! We're a local GTA company. Would love to discuss branded merchandise for your divisions. Let's connect! 💙"},
+            {name:"LifeLabs",address:"6560 Kennedy Rd, Mississauga, ON L5T 2X4",distance:"24.0 km",employees:"6,000+",website:"https://www.lifelabs.com",instagram:"@lifelabslp",instagramUrl:"https://www.instagram.com/lifelabslp/",linkedin:"https://ca.linkedin.com/company/lifelabs-medical-laboratory-services",contactName:"Not found — request Marketing/Communications",contactTitle:"Marketing / Communications Manager",contactEmail:"contactus-on@lifelabs.com",contactPhone:"1-877-849-3637",googleRating:"3.3",socialActivity:"Moderate",dealRating:"Hot",buyingSignals:"Canada's largest community diagnostic lab. 6,000+ employees across hundreds of locations. Constantly opening new labs — each needs branded signage and staff items.",doorOpener:"Branded hand sanitizer set or branded water bottle with LifeLabs logo",mutualConnections:"Unable to verify — recommend Paulo check manually",competitors:"Competes with Dynacare — both are huge lab companies",comments:"Canada's largest community laboratory services company. 6,000+ employees across hundreds of patient service centres. Constantly expanding — new locations need branded materials. Mississauga HQ.",events:"Health awareness campaigns; new lab openings; employee recognition events",altContact:"Ontario inquiries: 1-877-849-3637",mockupNotes:"Healthcare/lab: branded lab coats, custom scrub tops, branded hand sanitizers, ID badge holders, branded water bottles, custom tote bags. Use LifeLabs' teal and white brand colours.",emailSubject:"Branded gear for 6,000+ LifeLabs team members — local GTA partner 🔬",emailBody:"Hi there,\n\nI'm Paulo from Bulkamania Promotions — we're a GTA-based branded products company in North York.\n\nLifeLabs is Canada's largest community diagnostic lab company, and with 6,000+ employees across hundreds of locations, I think there's an enormous opportunity for branded merchandise — from staff uniforms and lab coats to new location opening kits and employee recognition items.\n\nAt Bulkamania, we specialize in custom branded apparel (lab coats, scrubs, polos), promotional items (hand sanitizers, water bottles, tote bags), and employee welcome kits. We're local and can handle high-volume orders with fast turnaround.\n\nI've put together a quick presentation showing the LifeLabs logo on some of our trending products — take a look and let me know what you think!\n\nI'd love to come out to your Mississauga office with some samples. When would work for a quick chat?\n\nPaulo Colaiacovo\nBulkamania Promotions\n4141 Weston Road, North York, ON\n🌐 bulkamania.com",instagramDM:"Hey LifeLabs! 🔬🔥 We mocked up your logo on some trending branded products — looks amazing! We're a local GTA promo company. Would love to help gear up your 6,000+ team!",linkedinDM:"Hi! We put together a mockup with the LifeLabs logo on some trending branded products — it looks fantastic! We're a local GTA company. Would love to discuss branded merchandise for your growing team. Let's connect! 🔬"}
         ];
 
+        // STATE MANAGEMENT
+        let cardStates = {};
+        prospects.forEach(p => {
+            cardStates[p.name] = {
+                status: 'Not Contacted',
+                emailSubject: p.emailSubject,
+                emailBody: p.emailBody,
+                instagramDM: p.instagramDM,
+                linkedinDM: p.linkedinDM,
+                repNotes: '',
+                presentation: null
+            };
+        });
+
         let currentFilter = 'all';
-        let contactedLeads = {};
-        let leadNotes = {};
+        let currentSearch = '';
+        let scrolledPast = false;
 
-        const leadsGrid = document.getElementById('leadsGrid');
-        const searchInput = document.getElementById('searchInput');
-        const filterBtns = document.querySelectorAll('.filter-btn');
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards();
+            setupFilters();
+            setupScroll();
+            updateStats();
+            setupKeyboard();
+        });
 
-        function renderLeads(filter = 'all', search = '') {
-            leadsGrid.innerHTML = '';
-            const filtered = leads.filter(lead => {
-                const matchesFilter = filter === 'all' || lead.deal === filter;
-                const matchesSearch = search === '' || lead.name.toLowerCase().includes(search.toLowerCase()) ||
-                                     lead.industry.toLowerCase().includes(search.toLowerCase());
-                return matchesFilter && matchesSearch;
-            });
+        function renderCards() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
 
-            filtered.forEach(lead => {
-                leadsGrid.appendChild(createLeadCard(lead));
+            prospects.forEach(prospect => {
+                const card = createCard(prospect);
+                grid.appendChild(card);
             });
         }
 
-        function createLeadCard(lead) {
+        function createCard(prospect) {
+            const state = cardStates[prospect.name];
+            const dealColor = prospect.dealRating === 'Hot' ? 'badge-hot' : prospect.dealRating === 'Warm' ? 'badge-warm' : 'badge-cool';
+            const socialBadge = prospect.socialActivity === 'Active' ? 'badge-active' : 'badge-moderate';
+
+            const stars = '★'.repeat(Math.floor(parseFloat(prospect.googleRating) || 0)) +
+                         '☆'.repeat(5 - Math.floor(parseFloat(prospect.googleRating) || 0));
+
             const card = document.createElement('div');
-            card.className = `lead-card ${lead.deal}`;
-            const status = contactedLeads[lead.id] || 'Not Contacted';
-
-            const socialBadgeClass = lead.socialActivity === 'active' ? 'active' : lead.socialActivity === 'moderate' ? 'moderate' : 'low';
-
-            let instaLink = '';
-            let linkedinLink = '';
-
-            if (lead.instagram && lead.instagram !== 'Search' && lead.instagram !== 'Has account') {
-                instaLink = `<a href="https://instagram.com/${lead.instagram.replace('@', '')}" target="_blank" class="contact-link">Instagram ${lead.instagramFollowers}</a>`;
-            }
-            if (lead.linkedin) {
-                linkedinLink = `<a href="https://linkedin.com/company/${lead.linkedin.split('/').pop()}" target="_blank" class="contact-link">LinkedIn</a>`;
-            }
-
-            const emailSubjectEncoded = encodeURIComponent(lead.emailSubject);
-            const emailBodyEncoded = encodeURIComponent(lead.emailBody);
+            card.className = 'prospect-card';
+            card.dataset.name = prospect.name;
+            card.dataset.rating = prospect.dealRating.toLowerCase();
 
             card.innerHTML = `
-                <div class="lead-info">
-                    <div class="company-name">${lead.name}</div>
-                    <div class="deal-badge ${lead.deal}">${lead.deal.toUpperCase()} PRIORITY</div>
-
-                    <div class="info-row">
-                        <span class="info-label">📍 Distance:</span>
-                        <span>${lead.distance}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">👥 Employees:</span>
-                        <span>${lead.employees}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">🏢 Industry:</span>
-                        <span>${lead.industry}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">📍 Address:</span>
-                        <span style="font-size: 12px;">${lead.address}</span>
+                <!-- LEFT PANEL -->
+                <div class="card-left">
+                    <div class="company-header">
+                        <div style="flex: 1;">
+                            <div class="company-name" onclick="window.open('${prospect.website}', '_blank')">${prospect.name}</div>
+                        </div>
                     </div>
 
-                    <div class="info-row">
-                        <span class="info-label">👤 Contact:</span>
-                        <span>${lead.contact}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">📞 Phone:</span>
-                        <a href="tel:${lead.phone}" class="contact-link">${lead.phone}</a>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">✉️ Email:</span>
-                        <a href="mailto:${lead.email}" class="contact-link">${lead.email}</a>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+                        <span class="badge badge-distance">${prospect.distance}</span>
+                        <span class="badge badge-employees">${prospect.employees}</span>
+                        <span class="badge ${dealColor}">${prospect.dealRating}</span>
+                        <span class="badge ${socialBadge}">${prospect.socialActivity}</span>
                     </div>
 
-                    <div class="contact-links">
-                        ${instaLink}
-                        ${linkedinLink}
+                    <div class="rating-stars">${stars}</div>
+
+                    <div class="info-section">
+                        <div class="info-label">Address</div>
+                        <div class="info-value">${prospect.address}</div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-label">Contact</div>
+                        <div class="info-value">
+                            <strong>${prospect.contactName}</strong><br>
+                            ${prospect.contactTitle}<br>
+                            ${prospect.contactEmail ? `<a href="mailto:${prospect.contactEmail}">${prospect.contactEmail}</a><br>` : ''}
+                            ${prospect.contactPhone ? `<a href="tel:${prospect.contactPhone}">${prospect.contactPhone}</a>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-label">Social Media</div>
+                        <div class="info-value">
+                            <a href="${prospect.instagramUrl}" target="_blank">${prospect.instagram}</a><br>
+                            <a href="${prospect.linkedin}" target="_blank">LinkedIn Profile</a>
+                        </div>
                     </div>
 
                     <div class="buying-signals">
-                        <strong>💰 Buying Signals:</strong> ${lead.buyingSignals}
+                        <strong>💡 Buying Signal:</strong> ${prospect.buyingSignals}
                     </div>
 
-                    <div class="events-section">
-                        <strong>📅 Events:</strong>
-                        ${lead.events}
+                    <div class="info-section">
+                        <div class="info-label">Door Opener</div>
+                        <div class="info-value">${prospect.doorOpener}</div>
                     </div>
 
-                    <div class="door-opener">
-                        <strong>🎁 Door Opener:</strong>
-                        ${lead.doorOpener}
+                    <div class="info-section">
+                        <div class="info-label">Mutual Connections</div>
+                        <div class="info-value">${prospect.mutualConnections}</div>
                     </div>
 
-                    <div class="rating-stars">⭐ Google: ${lead.googleRating}</div>
-                    <div class="social-badge ${socialBadgeClass}">${lead.socialActivity.toUpperCase()} SOCIAL</div>
+                    <div class="info-section">
+                        <div class="info-label">Upcoming Events</div>
+                        <div class="info-value">${prospect.events}</div>
+                    </div>
+
+                    <div class="collapsible-header" onclick="this.nextElementSibling.classList.toggle('expanded')">
+                        📝 Comments & Details
+                        <span style="font-size: 12px;">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="comments-box">${prospect.comments}</div>
+                    </div>
+
+                    <div class="collapsible-header" onclick="this.nextElementSibling.classList.toggle('expanded')">
+                        🎨 Mockup Notes
+                        <span style="font-size: 12px;">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="comments-box">${prospect.mockupNotes}</div>
+                    </div>
+
+                    <div class="collapsible-header" onclick="this.nextElementSibling.classList.toggle('expanded')">
+                        📞 Alternative Contact Methods
+                        <span style="font-size: 12px;">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="comments-box">${prospect.altContact}</div>
+                    </div>
                 </div>
 
-                <div class="action-panel">
-                    <div class="status-tracker">
-                        <button class="status-btn ${status === 'Not Contacted' ? 'active' : ''}" onclick="updateStatus(${lead.id}, 'Not Contacted')">Not Contacted</button>
-                        <button class="status-btn ${status === 'Contacted' ? 'active' : ''}" onclick="updateStatus(${lead.id}, 'Contacted')">Contacted</button>
-                        <button class="status-btn ${status === 'Follow Up' ? 'active' : ''}" onclick="updateStatus(${lead.id}, 'Follow Up')">Follow Up</button>
-                        <button class="status-btn ${status === 'Won' ? 'active' : ''}" onclick="updateStatus(${lead.id}, 'Won')">Won</button>
-                        <button class="status-btn ${status === 'Lost' ? 'active' : ''}" onclick="updateStatus(${lead.id}, 'Lost')">Lost</button>
-                    </div>
-
-                    <div class="email-section">
-                        <h4>EMAIL OUTREACH</h4>
-                        <input type="text" class="email-input" id="emailSubject${lead.id}" value="${lead.emailSubject}" placeholder="Email subject">
-                        <textarea class="email-textarea" id="emailBody${lead.id}" placeholder="Email body">${lead.emailBody}</textarea>
-                        <div class="email-buttons">
-                            <button class="btn-small gmail" onclick="openGmail(${lead.id})">Open in Gmail</button>
-                            <button class="btn-small" onclick="copyEmailText(${lead.id})">Copy Email</button>
-                            <button class="btn-small" onclick="resetEmail(${lead.id})">Reset</button>
-                        </div>
-                        <div class="file-upload" style="margin-top: 8px; font-size: 11px;">
-                            <label>Presentation: <input type="file" accept=".pdf,.pptx,.ppt" style="font-size: 10px;"></label>
+                <!-- RIGHT PANEL -->
+                <div class="card-right">
+                    <!-- STATUS TRACKER -->
+                    <div>
+                        <label style="font-size: 11px; font-weight: 600; color: #666; display: block; margin-bottom: 6px;">Status</label>
+                        <div class="status-tracker">
+                            <button class="status-btn ${state.status === 'Not Contacted' ? 'selected' : ''}" onclick="updateStatus('${prospect.name}', 'Not Contacted', this)">Not Contacted</button>
+                            <button class="status-btn ${state.status === 'Contacted' ? 'selected' : ''}" onclick="updateStatus('${prospect.name}', 'Contacted', this)">Contacted</button>
+                            <button class="status-btn ${state.status === 'Follow Up' ? 'selected' : ''}" onclick="updateStatus('${prospect.name}', 'Follow Up', this)">Follow Up</button>
+                            <button class="status-btn ${state.status === 'Closed Won' ? 'selected' : ''}" onclick="updateStatus('${prospect.name}', 'Closed Won', this)">Closed Won</button>
+                            <button class="status-btn ${state.status === 'Closed Lost' ? 'selected' : ''}" onclick="updateStatus('${prospect.name}', 'Closed Lost', this)">Closed Lost</button>
                         </div>
                     </div>
 
-                    <div class="dm-section">
-                        <h4>INSTAGRAM DM</h4>
-                        <textarea class="dm-textarea" id="instaDM${lead.id}" placeholder="Instagram DM">${lead.instagramDM}</textarea>
-                        <div class="char-count"><span id="instaCount${lead.id}">0</span>/300 characters</div>
-                        <div class="dm-buttons">
-                            <button class="btn-insta" onclick="openInstagram('${lead.instagram}')">📸 Open Instagram</button>
-                            <button class="btn-small" onclick="copyDMText(${lead.id}, 'insta')">Copy DM</button>
+                    <!-- EMAIL SECTION -->
+                    <div style="border-top: 1px solid #ddd; padding-top: 10px;">
+                        <div class="input-group">
+                            <label>📧 Email Subject</label>
+                            <input type="text" class="email-subject-${prospect.name}" value="${state.emailSubject}">
                         </div>
-                        <div class="file-upload" style="margin-top: 8px;">
-                            <label>Mockup: <input type="file" accept="image/*" style="font-size: 10px;"></label>
+
+                        <div class="input-group">
+                            <label>Email Body</label>
+                            <textarea class="email-body-${prospect.name}">${state.emailBody}</textarea>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Presentation File</label>
+                            <input type="file" class="file-input-${prospect.name}" style="padding: 4px; border: 1px dashed #ccc; border-radius: 3px; width: 100%; cursor: pointer;">
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="https://chatgpt.com/g/g-687f1127e25881918cab0e80dc5f0e39-bulkamania-presentation-creator" target="_blank" class="action-btn" style="background: #f0f0f0;">🎨 Create</a>
+                            <button class="action-btn primary" onclick="openGmail('${prospect.name}')">Gmail</button>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="copyEmailContent('${prospect.name}')">📋 Copy Email</button>
+                            <a href="#" class="action-btn reset-link" onclick="resetEmail('${prospect.name}'); return false;">Reset</a>
                         </div>
                     </div>
 
-                    <div class="dm-section">
-                        <h4>LINKEDIN DM</h4>
-                        <textarea class="dm-textarea" id="linkedinDM${lead.id}" placeholder="LinkedIn DM">${lead.linkedinDM}</textarea>
-                        <div class="char-count"><span id="linkedinCount${lead.id}">0</span>/300 characters</div>
-                        <div class="dm-buttons">
-                            <button class="btn-linkedin" onclick="openLinkedin('${lead.linkedin}')">💼 Open LinkedIn</button>
-                            <button class="btn-small" onclick="copyDMText(${lead.id}, 'linkedin')">Copy DM</button>
+                    <!-- INSTAGRAM DM SECTION -->
+                    <div style="border-top: 1px solid #ddd; padding-top: 10px;">
+                        <div class="input-group">
+                            <label>📱 Instagram DM</label>
+                            <textarea class="instagram-dm-${prospect.name}" placeholder="Edit your Instagram DM...">${state.instagramDM}</textarea>
+                            <div class="char-count"><span class="ig-count">0</span>/280</div>
                         </div>
-                        <div class="file-upload" style="margin-top: 8px;">
-                            <label>Attachment: <input type="file" style="font-size: 10px;"></label>
+
+                        <div class="action-buttons">
+                            <a href="${prospect.instagramUrl}" target="_blank" class="action-btn">Open Instagram</a>
+                            <button class="action-btn" onclick="copyInstagramDM('${prospect.name}')">📋 Copy</button>
                         </div>
                     </div>
 
-                    <div class="quick-actions">
-                        <button class="btn-action" onclick="alert('Dialing ${lead.phone}')">📞 Call</button>
-                        <button class="btn-action" onclick="window.open('https://www.google.com/search?q=${lead.name} site:${lead.email.split('@')[1]}', '_blank')">🌐 Website</button>
-                    </div>
-
-                    <div class="collapsible-section">
-                        <div class="collapsible-header" onclick="toggleCollapsible(this)">
-                            🎨 Mockup Notes
-                            <span class="collapsible-toggle">▼</span>
+                    <!-- LINKEDIN DM SECTION -->
+                    <div style="border-top: 1px solid #ddd; padding-top: 10px;">
+                        <div class="input-group">
+                            <label>💼 LinkedIn DM</label>
+                            <textarea class="linkedin-dm-${prospect.name}" placeholder="Edit your LinkedIn DM...">${state.linkedinDM}</textarea>
                         </div>
-                        <div class="collapsible-content">
-                            <strong>Suggested Items:</strong>
-                            <p>${lead.mockup}</p>
+
+                        <div class="action-buttons">
+                            <a href="${prospect.linkedin}" target="_blank" class="action-btn">Open LinkedIn</a>
+                            <button class="action-btn" onclick="copyLinkedInDM('${prospect.name}')">📋 Copy</button>
                         </div>
                     </div>
 
-                    <div style="border: 1px solid #ddd; border-radius: 4px; background: white;">
-                        <div style="padding: 10px; border-bottom: 1px solid #ddd;">
-                            <h4 style="font-size: 12px; margin-bottom: 8px;">Rep Notes</h4>
+                    <!-- QUICK LINKS -->
+                    <div style="border-top: 1px solid #ddd; padding-top: 10px;">
+                        <div class="quick-links">
+                            <a href="tel:${prospect.contactPhone}" class="action-btn" onclick="return confirm('Call ${prospect.contactPhone}?')">☎️ Call</a>
+                            <a href="${prospect.website}" target="_blank" class="action-btn">🌐 Website</a>
+                            <a href="mailto:${prospect.contactEmail}" class="action-btn">✉️ Email</a>
                         </div>
-                        <textarea class="notes-textarea" id="notes${lead.id}" placeholder="Add notes about this lead...">${leadNotes[lead.id] || ''}</textarea>
                     </div>
 
-                    <button class="export-btn" onclick="exportLead(${lead.id})">📥 Export This Lead</button>
+                    <!-- REP NOTES -->
+                    <div style="border-top: 1px solid #ddd; padding-top: 10px;">
+                        <div class="input-group">
+                            <label>📌 Rep Notes</label>
+                            <textarea class="rep-notes-${prospect.name}" placeholder="Add your notes here...">${state.repNotes}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- EXPORT BUTTON -->
+                    <button class="action-btn primary" onclick="exportProspect('${prospect.name}')" style="width: 100%; margin-top: 10px;">📥 Export This Prospect</button>
                 </div>
             `;
 
-            // Add character counters
-            setTimeout(() => {
-                const instaDM = document.getElementById(`instaDM${lead.id}`);
-                const linkedinDM = document.getElementById(`linkedinDM${lead.id}`);
-                if (instaDM) {
-                    instaDM.addEventListener('input', (e) => {
-                        document.getElementById(`instaCount${lead.id}`).textContent = e.target.value.length;
-                    });
-                    document.getElementById(`instaCount${lead.id}`).textContent = instaDM.value.length;
-                }
-                if (linkedinDM) {
-                    linkedinDM.addEventListener('input', (e) => {
-                        document.getElementById(`linkedinCount${lead.id}`).textContent = e.target.value.length;
-                    });
-                    document.getElementById(`linkedinCount${lead.id}`).textContent = linkedinDM.value.length;
-                }
-            }, 0);
+            // Set up char counting for Instagram
+            const igTextarea = card.querySelector(`.instagram-dm-${prospect.name}`);
+            const igCount = card.querySelector('.ig-count');
+            igTextarea.addEventListener('input', (e) => {
+                igCount.textContent = e.target.value.length;
+            });
+
+            // Set up auto-save on input changes
+            card.querySelectorAll('input, textarea').forEach(el => {
+                el.addEventListener('change', () => {
+                    saveCardState(prospect.name, card);
+                });
+            });
 
             return card;
         }
 
-        function updateStatus(leadId, status) {
-            contactedLeads[leadId] = status;
-            updateProgress();
-            renderLeads(currentFilter, searchInput.value);
+        function saveCardState(name, card) {
+            const state = cardStates[name];
+            state.emailSubject = card.querySelector(`.email-subject-${name}`).value;
+            state.emailBody = card.querySelector(`.email-body-${name}`).value;
+            state.instagramDM = card.querySelector(`.instagram-dm-${name}`).value;
+            state.linkedinDM = card.querySelector(`.linkedin-dm-${name}`).value;
+            state.repNotes = card.querySelector(`.rep-notes-${name}`).value;
         }
 
-        function updateProgress() {
-            const contacted = Object.values(contactedLeads).filter(s => s !== 'Not Contacted').length;
-            document.getElementById('contactedCount').textContent = `${contacted}/20`;
-
-            const hotCount = leads.filter(l => l.deal === 'hot').length;
-            const warmCount = leads.filter(l => l.deal === 'warm').length;
-            const coolCount = leads.filter(l => l.deal === 'cool').length;
-
-            document.getElementById('hotCount').textContent = hotCount;
-            document.getElementById('warmCount').textContent = warmCount;
-            document.getElementById('coolCount').textContent = coolCount;
-
-            document.getElementById('footerHot').textContent = hotCount;
-            document.getElementById('footerWarm').textContent = warmCount;
-            document.getElementById('footerCool').textContent = coolCount;
+        function updateStatus(name, status, btn) {
+            cardStates[name].status = status;
+            const card = document.querySelector(`[data-name="${name}"]`);
+            card.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            updateStats();
         }
 
-        function openGmail(leadId) {
-            const lead = leads.find(l => l.id === leadId);
-            const subject = document.getElementById(`emailSubject${leadId}`).value;
-            const body = document.getElementById(`emailBody${leadId}`).value;
-            const to = lead.email;
-            window.open(`https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(to)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+        function resetEmail(name) {
+            if (confirm('Reset email to default content?')) {
+                const prospect = prospects.find(p => p.name === name);
+                cardStates[name].emailSubject = prospect.emailSubject;
+                cardStates[name].emailBody = prospect.emailBody;
+                const card = document.querySelector(`[data-name="${name}"]`);
+                card.querySelector(`.email-subject-${name}`).value = prospect.emailSubject;
+                card.querySelector(`.email-body-${name}`).value = prospect.emailBody;
+            }
+        }
+
+        function openGmail(name) {
+            const card = document.querySelector(`[data-name="${name}"]`);
+            const subject = encodeURIComponent(card.querySelector(`.email-subject-${name}`).value);
+            const body = encodeURIComponent(card.querySelector(`.email-body-${name}`).value);
+            const to = encodeURIComponent('placeholder@example.com');
+            window.open(`https://mail.google.com/mail/?view=cm&to=${to}&su=${subject}&body=${body}`, '_blank');
+        }
+
+        function copyEmailContent(name) {
+            const card = document.querySelector(`[data-name="${name}"]`);
+            const subject = card.querySelector(`.email-subject-${name}`).value;
+            const body = card.querySelector(`.email-body-${name}`).value;
+            const fullEmail = `Subject: ${subject}\n\n${body}`;
+            copyToClipboard(fullEmail, 'Email copied to clipboard!');
+        }
+
+        function copyInstagramDM(name) {
+            const card = document.querySelector(`[data-name="${name}"]`);
+            const dm = card.querySelector(`.instagram-dm-${name}`).value;
+            copyToClipboard(dm, 'Instagram DM copied!');
+        }
+
+        function copyLinkedInDM(name) {
+            const card = document.querySelector(`[data-name="${name}"]`);
+            const dm = card.querySelector(`.linkedin-dm-${name}`).value;
+            copyToClipboard(dm, 'LinkedIn DM copied!');
         }
 
         function copyToClipboard(text, msg) {
@@ -1518,197 +1179,163 @@
             }, 1500);
         }
 
-        function copyEmailText(leadId) {
-            const subject = document.getElementById(`emailSubject${leadId}`).value;
-            const body = document.getElementById(`emailBody${leadId}`).value;
-            const fullEmail = `Subject: ${subject}\n\n${body}`;
-            copyToClipboard(fullEmail, 'Email copied to clipboard!');
+        function exportProspect(name) {
+            const prospect = prospects.find(p => p.name === name);
+            const state = cardStates[name];
+            const csv = [
+                ['Prospect Name', prospect.name],
+                ['Status', state.status],
+                ['Address', prospect.address],
+                ['Contact Name', prospect.contactName],
+                ['Contact Email', prospect.contactEmail],
+                ['Contact Phone', prospect.contactPhone],
+                ['Deal Rating', prospect.dealRating],
+                ['Email Subject', state.emailSubject],
+                ['Email Body', state.emailBody],
+                ['Instagram DM', state.instagramDM],
+                ['LinkedIn DM', state.linkedinDM],
+                ['Rep Notes', state.repNotes]
+            ].map(row => row.map(cell => `"${cell.toString().replace(/"/g, '""')}"`).join(',')).join('\n');
+
+            downloadCSV(csv, `${name.replace(/\s+/g, '-')}.csv`);
         }
 
-        function resetEmail(leadId) {
-            const lead = leads.find(l => l.id === leadId);
-            document.getElementById(`emailSubject${leadId}`).value = lead.emailSubject;
-            document.getElementById(`emailBody${leadId}`).value = lead.emailBody;
-            showToast('Email reset to default');
+        function exportAllCSV() {
+            let csv = ['Prospect Name', 'Status', 'Deal Rating', 'Distance', 'Employees', 'Contact Name', 'Contact Email', 'Contact Phone', 'Rep Notes'].map(h => `"${h}"`).join(',') + '\n';
+
+            prospects.forEach(prospect => {
+                const state = cardStates[prospect.name];
+                const row = [
+                    prospect.name,
+                    state.status,
+                    prospect.dealRating,
+                    prospect.distance,
+                    prospect.employees,
+                    prospect.contactName,
+                    prospect.contactEmail,
+                    prospect.contactPhone,
+                    state.repNotes
+                ].map(cell => `"${cell.toString().replace(/"/g, '""')}"`).join(',');
+                csv += row + '\n';
+            });
+
+            downloadCSV(csv, 'bulkamania-prospects-2026-03-19.csv');
         }
 
-        function copyDMText(leadId, platform) {
-            const dmText = document.getElementById(`${platform}DM${leadId}`).value;
-            copyToClipboard(dmText, `${platform.charAt(0).toUpperCase() + platform.slice(1)} DM copied!`);
-        }
-
-        function openInstagram(handle) {
-            if (handle && handle !== 'Search' && handle !== 'Has account') {
-                window.open(`https://instagram.com/${handle.replace('@', '')}`, '_blank');
-            } else {
-                showToast('Instagram handle not available');
-            }
-        }
-
-        function openLinkedin(companyUrl) {
-            if (companyUrl) {
-                window.open(`https://${companyUrl}`, '_blank');
-            }
-        }
-
-        function toggleCollapsible(header) {
-            const content = header.nextElementSibling;
-            const toggle = header.querySelector('.collapsible-toggle');
-            content.classList.toggle('active');
-            toggle.classList.toggle('active');
-        }
-
-        function exportLead(leadId) {
-            const lead = leads.find(l => l.id === leadId);
-            const subject = document.getElementById(`emailSubject${leadId}`).value;
-            const body = document.getElementById(`emailBody${leadId}`).value;
-            const instaDM = document.getElementById(`instaDM${leadId}`).value;
-            const linkedinDM = document.getElementById(`linkedinDM${leadId}`).value;
-            const notes = document.getElementById(`notes${leadId}`).value;
-            const status = contactedLeads[leadId] || 'Not Contacted';
-
-            const exportData = `
-BULKAMANIA PROMOTIONS - LEAD EXPORT
-Date: March 18, 2026
----
-
-Company: ${lead.name}
-Address: ${lead.address}
-Distance: ${lead.distance}
-Employees: ${lead.employees}
-Industry: ${lead.industry}
-Deal Priority: ${lead.deal.toUpperCase()}
-
-Contact: ${lead.contact}
-Phone: ${lead.phone}
-Email: ${lead.email}
-
-Status: ${status}
-
-BUYING SIGNALS:
-${lead.buyingSignals}
-
-UPCOMING EVENTS:
-${lead.events}
-
-DOOR OPENER:
-${lead.doorOpener}
-
-SUGGESTED MOCKUPS:
-${lead.mockup}
-
----
-
-EMAIL SUBJECT:
-${subject}
-
-EMAIL BODY:
-${body}
-
----
-
-INSTAGRAM DM:
-${instaDM}
-
-LINKEDIN DM:
-${linkedinDM}
-
----
-
-REP NOTES:
-${notes || '(no notes)'}
-
-Generated: ${new Date().toLocaleString()}
-`;
-
-            const blob = new Blob([exportData], { type: 'text/plain' });
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Bulkamania-${lead.name.replace(/\s+/g, '-')}-2026-03-18.txt`;
+            a.download = filename;
+            document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
         }
 
-        function exportAllLeads() {
-            let allData = `BULKAMANIA PROMOTIONS - ALL LEADS EXPORT
-Date: March 18, 2026
-Total Prospects: 20
-
----
-
-`;
-
-            leads.forEach(lead => {
-                const subject = document.getElementById(`emailSubject${lead.id}`).value;
-                const body = document.getElementById(`emailBody${lead.id}`).value;
-                const instaDM = document.getElementById(`instaDM${lead.id}`).value;
-                const linkedinDM = document.getElementById(`linkedinDM${lead.id}`).value;
-                const notes = document.getElementById(`notes${lead.id}`).value;
-                const status = contactedLeads[lead.id] || 'Not Contacted';
-
-                allData += `
-${lead.name.toUpperCase()}
-Distance: ${lead.distance} | Employees: ${lead.employees} | Industry: ${lead.industry}
-Priority: ${lead.deal.toUpperCase()} | Status: ${status}
-Address: ${lead.address}
-Contact: ${lead.contact} | Phone: ${lead.phone} | Email: ${lead.email}
-
-BUYING SIGNALS: ${lead.buyingSignals}
-EVENTS: ${lead.events}
-DOOR OPENER: ${lead.doorOpener}
-
-EMAIL SUBJECT: ${subject}
-EMAIL BODY:
-${body}
-
-INSTAGRAM DM: ${instaDM}
-LINKEDIN DM: ${linkedinDM}
-
-REP NOTES: ${notes || '(none)'}
-
----
-
-`;
+        function setupFilters() {
+            document.querySelectorAll('input[name="dealFilter"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    currentFilter = e.target.value;
+                    filterCards();
+                });
             });
 
-            const blob = new Blob([allData], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Bulkamania-All-Leads-2026-03-18.txt';
-            a.click();
-            window.URL.revokeObjectURL(url);
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                currentSearch = e.target.value.toLowerCase();
+                filterCards();
+            });
+
+            document.getElementById('collapsedSearch').addEventListener('input', (e) => {
+                currentSearch = e.target.value.toLowerCase();
+                document.getElementById('searchInput').value = currentSearch;
+                filterCards();
+            });
+
+            document.querySelectorAll('[data-filter]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentFilter = e.target.dataset.filter;
+                    document.querySelectorAll('.filter-button').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    document.querySelectorAll('input[name="dealFilter"]').forEach(r => r.checked = false);
+                    filterCards();
+                });
+            });
         }
 
-        // Event listeners
-        searchInput.addEventListener('input', (e) => {
-            renderLeads(currentFilter, e.target.value);
-        });
+        function filterCards() {
+            document.querySelectorAll('.prospect-card').forEach(card => {
+                const name = card.dataset.name;
+                const prospect = prospects.find(p => p.name === name);
+                let show = true;
 
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFilter = btn.dataset.filter;
-                renderLeads(currentFilter, searchInput.value);
+                if (currentFilter !== 'all' && prospect.dealRating.toLowerCase() !== currentFilter) {
+                    show = false;
+                }
+
+                if (currentSearch && !name.toLowerCase().includes(currentSearch)) {
+                    show = false;
+                }
+
+                card.classList.toggle('hidden', !show);
             });
-        });
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'f') {
-                e.preventDefault();
-                searchInput.focus();
-            }
-            if (e.ctrlKey && e.key === 'p') {
-                e.preventDefault();
-                window.print();
-            }
-        });
+            updateStats();
+        }
 
-        // Initial render
-        renderLeads();
+        function setupScroll() {
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('header');
+                const scrolled = window.scrollY > 80;
+
+                if (scrolled !== scrolledPast) {
+                    scrolledPast = scrolled;
+                    header.classList.toggle('collapsed', scrolled);
+                }
+            });
+        }
+
+        function setupKeyboard() {
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+            });
+        }
+
+        function updateStats() {
+            const visible = document.querySelectorAll('.prospect-card:not(.hidden)');
+            const hot = Array.from(visible).filter(card => {
+                const name = card.dataset.name;
+                const prospect = prospects.find(p => p.name === name);
+                return prospect.dealRating === 'Hot';
+            }).length;
+            const warm = Array.from(visible).filter(card => {
+                const name = card.dataset.name;
+                const prospect = prospects.find(p => p.name === name);
+                return prospect.dealRating === 'Warm';
+            }).length;
+            const cool = Array.from(visible).filter(card => {
+                const name = card.dataset.name;
+                const prospect = prospects.find(p => p.name === name);
+                return prospect.dealRating === 'Cool';
+            }).length;
+
+            const contacted = Object.values(cardStates).filter(s => s.status !== 'Not Contacted').length;
+            const followUp = Object.values(cardStates).filter(s => s.status === 'Follow Up').length;
+            const won = Object.values(cardStates).filter(s => s.status === 'Closed Won').length;
+
+            document.getElementById('hotCount').textContent = hot;
+            document.getElementById('warmCount').textContent = warm;
+            document.getElementById('coolCount').textContent = cool;
+            document.getElementById('progressFill').style.width = `${(contacted / prospects.length) * 100}%`;
+            document.getElementById('progressText').textContent = `${contacted}/${prospects.length}`;
+            document.getElementById('contactedCount').textContent = contacted;
+            document.getElementById('followUpCount').textContent = followUp;
+            document.getElementById('wonCount').textContent = won;
+        }
     </script>
 </body>
 </html>
